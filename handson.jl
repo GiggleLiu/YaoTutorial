@@ -39,15 +39,35 @@ measure(out; nshots=100)
 reg = rand_state(20)
 reg |> concentrate(20, qft, (4,5,6,7))
 
-using BenchmarkTools
-@benchmark $reg |> $(concentrate(20, qft, (4,1,6,5))) seconds=1
-
 # show to use GPU power
 using CuYao, CuArrays
 creg = reg |> cu
-@benchmark CuArrays.@sync $creg |> $(concentrate(20, qft, (4,1,6,5)))
+creg |> concentrate(20, qft, (4,1,6,5))
 
 nbit = 16
+
+# the hamiltonian
+hami = heisenberg(nbit)
+
+# the energy
+expect(hami, out)
+
+energy(reg) = real(expect(hami, reg))
+energy(zero_state(nbit) |> dc)
+
+# exact diagonalization
+using KrylovKit
+hmat = mat(hami)
+eg, vg = eigsolve(hmat, 1, :SR)
+
+# imaginary time evolution
+te = time_evolve(hami |> cache, -10im)
+reg = rand_state(nbit)
+energy(reg)
+reg |> te |> normalize!
+energy(reg)
+
+# vqe
 dc = random_diff_circuit(nbit)
 dc = dc |> autodiff(:BP)
 
@@ -56,15 +76,17 @@ dispatch!(dc, :random)
 
 out = zero_state(nbit) |> dc
 
-sx(i) = put(nbit, i=>X)
-sy(i) = put(nbit, i=>Y)
-sz(i) = put(nbit, i=>Z)
-
-hami = sum([sx(i)*sx(i+1)+sy(i)*sy(i+1)+sz(i)*sz(i+1) for i=1:nbit-1])
-
+# get the gradient
 ∇out = copy(out) |> hami
 backward!((copy(out), ∇out), dc)
 grad = gradient(dc)
 
-using Statistics: var, std
-std(grad)
+function grad()
+    out = zero_state(nbit) |> dc
+    dout = copy(out) |> hami
+    backward!((copy(out), dout), dc)
+    return gradient(dc)
+end
+
+dispatch!(-, dc, 0.01*grad())
+energy(zero_state(nbit) |> dc)
