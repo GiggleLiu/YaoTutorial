@@ -35,5 +35,12 @@ $ jupyter notebook YaoTutorial.ipynb
 [![asciicast](https://asciinema.org/a/99Cb0bi7khmrr9HrCR1tUbGaw.svg)](https://asciinema.org/a/99Cb0bi7khmrr9HrCR1tUbGaw?speed=2)
 
 ## References
+##### Find Yao
 https://github.com/QuantumBFS/Yao.jl
+
+##### Find Quantum algorihtms
 https://github.com/QuantumBFS/QuAlgorithmZoo.jl
+
+## How To contribute
+* submit an issue to report a bug, or ask for a feature request,
+* help us polish documentations, write more tests
