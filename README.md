@@ -1,6 +1,6 @@
 # A tutorial for Yao@v0.6
 
-For `Yao@v0.5` tutorial, click [here]().
+For `Yao@v0.5` tutorial, click [here](https://github.com/GiggleLiu/YaoTutorial/tree/v0.5.0).
 
 Setup Julia and Jupyter notebook environment following the instructions in
 https://datatofish.com/add-julia-to-jupyter/,
