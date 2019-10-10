@@ -1,4 +1,6 @@
-# A tutorial about using Yao
+# A tutorial for Yao@v0.6
+
+For `Yao@v0.5` tutorial, click [here]().
 
 Setup Julia and Jupyter notebook environment following the instructions in
 https://datatofish.com/add-julia-to-jupyter/,
@@ -11,28 +13,23 @@ $ jupyter notebook YaoTutorial.ipynb
 
 ## live coding
 
-##### Notes for Clip 1
-* Quantum Block Intermediate Representation (QBIR) for QFT
+##### Notes on Clip
+* Quantum Block Intermediate Representation (QBIR) of QFT
 * get matrix representation of a block
-* dagger a block
 * analyze properties
+* dagger a block
 * apply a blocks to a register
 * measure a register
-* block arithmatics
-* tuning the structure
 * using GPU
-
-[![asciicast](https://asciinema.org/a/GL4za0yb0fO3Vth2Z0JjJsMmj.svg)](https://asciinema.org/a/GL4za0yb0fO3Vth2Z0JjJsMmj?speed=2)
-
-##### Notes for Clip 2
 * Constructing a hamiltonian
 * get the expectation value
 * solve the ground state through
     * exact diagonalization (with KrylovKit)
+    * variational quantum eigensolver approach
     * imaginary time evolution
-    * VQE approach (with autodiff)
 
-[![asciicast](https://asciinema.org/a/99Cb0bi7khmrr9HrCR1tUbGaw.svg)](https://asciinema.org/a/99Cb0bi7khmrr9HrCR1tUbGaw?speed=2)
+
+[![asciicast](https://asciinema.org/a/rNG7cGDfkbvFEZE5vzNozPnIm.svg)](https://asciinema.org/a/rNG7cGDfkbvFEZE5vzNozPnIm?speed=2)
 
 ## References
 ##### Find Yao

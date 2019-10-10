@@ -3,3 +3,4 @@ docs/build
 *.jl.*.cov
 *.jl.mem
 .ipynb_checkpoints/
+__pycache__

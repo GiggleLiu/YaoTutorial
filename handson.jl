@@ -1,4 +1,4 @@
-using Yao, QuAlgorithmZoo
+using Yao, YaoExtensions
 
 # Quantum Block Intermediate Representation
 qft = QFTCircuit(4)
@@ -49,44 +49,27 @@ nbit = 16
 # the hamiltonian
 hami = heisenberg(nbit)
 
-# the energy
-expect(hami, out)
-
-energy(reg) = real(expect(hami, reg))
-energy(zero_state(nbit) |> dc)
-
 # exact diagonalization
-using KrylovKit
 hmat = mat(hami)
+using KrylovKit
 eg, vg = eigsolve(hmat, 1, :SR)
 
 # imaginary time evolution
 te = time_evolve(hami |> cache, -10im)
 reg = rand_state(nbit)
+energy(reg) = real(expect(hami, reg))
 energy(reg)
 reg |> te |> normalize!
 energy(reg)
 
 # vqe
-dc = random_diff_circuit(nbit)
-dc = dc |> autodiff(:BP)
+dc = variational_circuit(nbit)
 
 # parameter management
 dispatch!(dc, :random)
 
-out = zero_state(nbit) |> dc
-
-# get the gradient
-∇out = copy(out) |> hami
-backward!((copy(out), ∇out), dc)
-grad = gradient(dc)
-
-function grad()
-    out = zero_state(nbit) |> dc
-    dout = copy(out) |> hami
-    backward!((copy(out), dout), dc)
-    return gradient(dc)
+for i=1:100
+    regδ, paramsδ = expect'(hami, zero_state(16)=>dc)
+    dispatch!(-, dc, 0.1*paramsδ)
+    @show energy(zero_state(nbit) |> dc)
 end
-
-dispatch!(-, dc, 0.01*grad())
-energy(zero_state(nbit) |> dc)
