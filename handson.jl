@@ -1,49 +1,59 @@
 using Yao, YaoExtensions
 
-# Quantum Block Intermediate Representation
-qft = QFTCircuit(4)
+# ] st Yao
 
-@edit QFTCircuit(4)
+qft_circuit(4)
 
-# get matrix
-mat(qft)
+# Let's first define the CPHASE gate
+cphase(n, i, j) = control(n, i, j=> shift(2π/(2^(i-j+1))));
 
-# analyze properties
+# To show the definition of a shift gate, the symbolic engine is quite useful
+@vars θ
+mat(shift(θ))
+
+# A cphase is defined as
+mat(control(2, 2, 1=> shift(θ)))
+
+# with CPHASE gate, we have the qft circuit defined as
+hcphases(n, i) = chain(n, i==j ? put(n, i=>H) : cphase(n, j, i) for j in i:n);
+qft_circ(n::Int) = chain(n, hcphases(n, i) for i = 1:n)
+
+qft = qft_circ(3)
+mat(qft) |> Matrix
+
+# Note: this circuit is already defined in YaoExtensions,
+# try: `using YaoExtensions: qft_circ`
+
+# find matrix properties
 ishermitian(qft)
 isunitary(qft)
 isreflexive(qft)
 
-# dagger
+# get the dagger of qft
 iqft = qft'
 
-# arithmatics
-MyHGate = Rz(-π/2)*Rx(-π/2)*Rz(-π/2)
-mat(phase(-π/2)*MyHGate) ≈ mat(H)
-
-# tuning the structure
-function replace_hadamard(tree)
-    tree isa HGate && return deepcopy(MyHGate)
-    return chsubblocks(tree, replace_hadamard.(subblocks(tree)))
-end
-
-myqft = replace_hadamard(qft)
-
-# apply an algorithm
-reg = product_state(bit"0110")
+# run an qft block on a register
+reg = product_state(bit"011")
 out = copy(reg) |> qft
 copy(out) |> iqft ≈ reg
 
-measure(out; nshots=100)
+# perform measurements on the output
+res = measure(out; nshots=10)
 
-# the performance
+# bit strings can be indexed (in a little endian way)
+res[1][1]
+
+# if we want to run this quantum algorithm on a 20 qubit register at qubits (4,5,6,7)
 reg = rand_state(20)
-reg |> concentrate(20, qft, (4,5,6,7))
+reg |> subroutine(20, qft, (4,6,7))
 
 # show to use GPU power
 using CuYao, CuArrays
 creg = reg |> cu
-creg |> concentrate(20, qft, (4,1,6,5))
+creg |> subroutine(20, qft, (4,6,7))
 
+
+############################### VQE
 nbit = 16
 
 # the hamiltonian
