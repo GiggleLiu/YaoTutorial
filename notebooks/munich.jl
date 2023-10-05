@@ -184,7 +184,7 @@ Summarized in the file "clips/yao-v0.8.jl"
 """
 
 # ╔═╡ e0a259f4-6d3d-45e6-890c-35115da50328
-livecoding("clips/yao-v0.8.cast")
+livecoding("https://raw.githubusercontent.com/GiggleLiu/YaoTutorial/munich/clips/yao-v0.8.cast")
 
 # ╔═╡ 4f6b0937-46f2-49d7-884a-b4922fcc967e
 md"""

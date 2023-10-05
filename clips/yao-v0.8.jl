@@ -3,7 +3,7 @@ using Pkg; Pkg.status()
 
 using Yao
 
-# Section 1: representing a quantum state
+#== Section 1: representing a quantum state ==#
 zero_state(3)
 
 # The quantum state is represented as a vector
@@ -24,7 +24,7 @@ rand_state(3, nlevel=3)
 # To create a qudit product state, we can use
 product_state(dit"120;3")
 
-# Section 2: representing a quantum circuit
+#== Section 2: representing a quantum circuit ==#
 # A quantum operator is represented as a matrix, or a Yao block.
 # There are two types of blocks, primitive blocks and composite blocks.
 # Primitive blocks are the basic building blocks of a quantum circuit.
@@ -53,15 +53,26 @@ Measure(2)  # Measurement
 
 time_evolve(X, 0.3)  # Time evolution, the first block can be any Hermitian operator
 
-# Section 3: quantum circuit simulation
+# Composite blocks
+put(3, 1=>X)   # Put a block at the first qubit of a 3-qubit register
+
+kron(X, X)     # Kronecker product of two blocks
+
+control(3, 1, 2=>X)  # Control the second qubit of a 3-qubit register with the first qubit
+
+chain(3, put(3, 1=>X), control(3, 1, 2=>X))  # Chain two blocks into a circuit
+
+im * X   # Scaling a block
+
+# X₁X₂ + X₂X₃
+sum([kron(3, 1=>X, 2=>X), kron(3, 2=>X, 3=>X)])
+
+#== Section 3: quantum Fourier transformation simulation ==#
 
 EasyBuild.qft_circuit(4)
 
 # Let's first define the CPHASE gate
 cphase(n, i, j) = control(n, i, j=> shift(2π/(2^(i-j+1))));
-
-# To show the definition of a shift gate, the symbolic engine is quite useful
-mat(shift(θ))
 
 # A cphase is defined as
 mat(control(2, 2, 1=> shift(θ)))
@@ -98,19 +109,36 @@ res[1][1]
 reg = rand_state(20)
 reg |> subroutine(20, qft, (4,6,7))
 
+#+ 2
+#== Section 3.1: QFT simulation on GPU ==#
 # show to use GPU power
 using CuYao
 creg = reg |> cu
 creg |> subroutine(20, qft, (4,6,7))
 
+#+ 2
+#== Section 3.2: QFT simulation with Tensor Networks ==#
+using YaoToEinsum
+
+qft20 = qft_circ(20);
+
+# convert to tensor network and optimize the contraction order
+tensornetwork = YaoToEinsum.yao2einsum(qft20;
+    initial_state=Dict([i=>0 for i in 1:20]),
+    final_state=Dict([i=>0 for i in 1:20]),
+    optimizer=TreeSA(nslices=3)
+    )
+
+# compute!
+contract(tensornetwork)
 
 #+ 3
-############################### VQE
+#== Section 4: Simulate variational quantum algorithms ==#
 #+ 1
 nbit = 16
 
 # the hamiltonian
-hami = heisenberg(nbit)
+hami = EasyBuild.heisenberg(nbit)
 
 # exact diagonalization
 hmat = mat(hami)
@@ -137,3 +165,48 @@ for i=1:100
     dispatch!(-, dc, 0.1*paramsδ)
     @show energy(zero_state(nbit) |> dc)
 end
+
+#== Section 5: Rydberg atoms as an example of qudit simulation ==#
+# We recommend to use the `Bloqade.jl` package to seriously simulate Rydberg atoms
+# Here, we only show how to use Yao to build a Rydberg atom simulator
+# In this example, we will use the 3-level Rydberg Hamiltonian to implement the Levine-Pichler Pulse
+nbits = 2
+
+reg = zero_state(nbits; nlevel=3)
+
+# prepare all states in (|0> - i|1>)/sqrt(2)
+# time evolve π/4 with the Raman pulse Hamiltonian is equivalent to doing a X rotation π/2
+apply!(reg, time_evolve(rydberg_chain(nbits; r=1.0), π/4))
+
+expected = join(fill(arrayreg([1.0, -im, 0]; nlevel=3), nbits)...) |> normalize!
+
+@test reg ≈ expected
+
+# |11> -> |W>
+reg0 = product_state(dit"11;3")
+te = time_evolve(rydberg_chain(2; Ω=1.0, V=1e5), π/sqrt(2))
+@test fidelity(reg0 |> te, product_state(dit"12;3") + product_state(dit"21;3") |> normalize!) ≈ 1
+
+# the Levine-Pichler Pulse
+Ω = 1.0   # sign flipped
+τ = 4.29268/Ω
+Δ = 0.377371*Ω
+V = 1e3
+ξ = -3.90242  # sign flipped
+h1 = rydberg_chain(nbits; Ω=Ω, Δ, V)
+h2 = rydberg_chain(nbits; Ω=Ω*exp(im*ξ), Δ, V)
+pulse = chain(time_evolve(h1, τ), time_evolve(h2, τ))
+@test mat(pulse) * reg.state ≈ apply(reg, pulse).state
+@test ishermitian(h1) && ishermitian(h2)
+
+i, j = dit"01;3", dit"11;3"
+
+# half pulse drives |11> to |11>
+# the first pulse completes a circle
+@test isapprox(pulse[1][j, j]|> abs, 1; atol=1e-3)
+
+ang1 = angle(pulse[i, i]) / π
+ang2 = angle(pulse[j, j]) / π
+@test isapprox(abs(pulse[i,i]), 1; atol=1e-2)
+@test isapprox(abs(pulse[j,j]), 1; atol=1e-2)
+@test isapprox(mod(2*ang1 - ang2, 2), 1, atol=1e-2)
