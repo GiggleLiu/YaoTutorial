@@ -98,18 +98,6 @@ ProjectQ: simulate up to 45 qubits, with 0.5 Petabyte memory (Steiger et al, 201
 # ╔═╡ fdfb1ca6-e830-4c5c-8672-b42d0cb91a87
 LocalResource("images/qubitlimit.png")
 
-# ╔═╡ 86fd00e8-289d-48ca-8904-980fc1e8dc18
-md"""
-# Different circuit simulation tracks
-1. Low entangled state
-    * Markov, Igor L., and Yaoyun Shi. “Simulating Quantum Computation by Contracting Tensor Networks.” SIAM Journal on Computing 38, no. 3 (January 2008): 963–81. https://doi.org/10.1137/050644756.
-    * Kalachev, Gleb, Pavel Panteleev, and Man-Hong Yung. “Recursive Multi-Tensor Contraction for XEB Verification of Quantum Circuits,” 2021, 1–9.
-    * Pan, Feng, and Pan Zhang. “Simulation of Quantum Circuits Using the Big-Batch Tensor Network Method.” Physical Review Letters 128, no. 3 (January 19, 2022): 030501. https://doi.org/10.1103/PhysRevLett.128.030501.
-2. Noisy limit
-    * Gao, Xun, and Luming Duan. “Efficient Classical Simulation of Noisy Quantum Computation.” October 7, 2018. arXiv.1810.03176.
-    * Shao, Yuguo, Fuchuan Wei, Song Cheng, and Zhengwei Liu. “Simulating Quantum Mean Values in Noisy Variational Quantum Algorithms: A Polynomial-Scale Approach.” July 20, 2023. arXiv.2306.05804.
-"""
-
 # ╔═╡ b517c6b9-2897-418f-b056-a256acdeffe4
 md"""
 Where to learn quantum algorithms:
@@ -165,22 +153,38 @@ md"""
 # YaoToEinsum
 """
 
+# ╔═╡ 86fd00e8-289d-48ca-8904-980fc1e8dc18
+md"""
+# Different circuit simulation tracks
+1. Low entangled state
+    * Markov, Igor L., and Yaoyun Shi. “Simulating Quantum Computation by Contracting Tensor Networks.” SIAM Journal on Computing 38, no. 3 (January 2008): 963–81. https://doi.org/10.1137/050644756.
+    * Kalachev, Gleb, Pavel Panteleev, and Man-Hong Yung. “Recursive Multi-Tensor Contraction for XEB Verification of Quantum Circuits,” 2021, 1–9.
+    * Pan, Feng, and Pan Zhang. “Simulation of Quantum Circuits Using the Big-Batch Tensor Network Method.” Physical Review Letters 128, no. 3 (January 19, 2022): 030501. https://doi.org/10.1103/PhysRevLett.128.030501.
+2. Noisy limit
+    * Gao, Xun, and Luming Duan. “Efficient Classical Simulation of Noisy Quantum Computation.” October 7, 2018. arXiv.1810.03176.
+    * Shao, Yuguo, Fuchuan Wei, Song Cheng, and Zhengwei Liu. “Simulating Quantum Mean Values in Noisy Variational Quantum Algorithms: A Polynomial-Scale Approach.” July 20, 2023. arXiv.2306.05804.
+"""
+
 # ╔═╡ bf7643c4-bae0-4d77-9903-29943f2efe5a
 md"Julia slack > yao-dev"
 
 # ╔═╡ 182b6520-d423-4aa5-8ef0-5e16f28960f6
 LocalResource("images/yaotoeinsum-question.png")
 
+# ╔═╡ 952b7b81-7d9a-450a-8973-d9111e90870d
+md"""
+# Bloqade
+"""
+
 # ╔═╡ d1449d83-02ce-45d0-adfe-db86a5ece921
 md"""
 # Live coding:
 
-summarized in "handson.jl"
-
-**Example 1**: construct a random wave function, apply QFT algorithm on qubits "4,5,6,7".
-
-**Example 2**: construct a 20 qubit Heisenberg chain hamiltonian, apply imaginary time evolution and VQE.
+Summarized in the file "clips/yao-v0.8.jl"
 """
+
+# ╔═╡ e0a259f4-6d3d-45e6-890c-35115da50328
+livecoding("clips/yao-v0.8.cast")
 
 # ╔═╡ 4f6b0937-46f2-49d7-884a-b4922fcc967e
 md"""
@@ -828,7 +832,9 @@ version = "17.4.0+2"
 # ╟─86fd00e8-289d-48ca-8904-980fc1e8dc18
 # ╟─bf7643c4-bae0-4d77-9903-29943f2efe5a
 # ╟─182b6520-d423-4aa5-8ef0-5e16f28960f6
+# ╠═952b7b81-7d9a-450a-8973-d9111e90870d
 # ╟─d1449d83-02ce-45d0-adfe-db86a5ece921
+# ╠═e0a259f4-6d3d-45e6-890c-35115da50328
 # ╟─4f6b0937-46f2-49d7-884a-b4922fcc967e
 # ╠═947fc8bf-bfcf-478c-b7c5-b235e71c4119
 # ╠═b3ad824e-92f8-4921-9e05-0d9737137e24

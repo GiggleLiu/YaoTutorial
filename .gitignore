@@ -4,3 +4,4 @@ docs/build
 *.jl.mem
 .ipynb_checkpoints/
 __pycache__
+.vscode

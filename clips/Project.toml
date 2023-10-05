@@ -1,0 +1,15 @@
+[deps]
+AsciinemaGenerator = "126a0909-f052-481b-a318-ea548fff52bb"
+CuYao = "b48ca7a8-dd42-11e8-2b8e-1b7706800275"
+KrylovKit = "0b1a1467-8014-51b9-945f-bf0ae24f4b77"
+SymEngine = "123dc426-2d89-5057-bbad-38513e3affd8"
+Yao = "5872b779-8223-5990-8dd0-5abbb0748c8c"
+YaoToEinsum = "9b173c7b-dc24-4dc5-a0e1-adab2f7b6ba9"
+
+[compat]
+AsciinemaGenerator = "0.1"
+CuYao = "0.3"
+KrylovKit = "0.6"
+SymEngine = "0.10"
+Yao = "0.8"
+YaoToEinsum = "0.1"
