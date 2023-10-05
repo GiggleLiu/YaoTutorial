@@ -1,4 +1,4 @@
-using Yao, YaoExtensions
+using Yao, Yao.EasyBuild, SymEngine
 
 # ] st Yao
 

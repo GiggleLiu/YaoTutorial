@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.27
+# v0.19.29
 
 using Markdown
 using InteractiveUtils
@@ -26,7 +26,49 @@ begin
 	</script>
 	""")
 	end
-end
+end;
+
+# ╔═╡ d0dd4e6b-5a48-47bc-80ef-fa994781ec1f
+md"# The link to this notebook: 
+[https://raw.githubusercontent.com/GiggleLiu/YaoTutorial/master/notebooks/munich.jl](https://raw.githubusercontent.com/GiggleLiu/YaoTutorial/master/notebooks/munich.jl)"
+
+# ╔═╡ fdc43a5a-0d79-45d3-b2c7-283278901a7e
+md"""
+# Simulating quantum systems: The curse of dimensionality
+"""
+
+# ╔═╡ 0f4e74f2-0b9f-4c1b-99c2-7c044e023d47
+LocalResource("images/coin.jpg", :width=>400)
+
+# ╔═╡ 60bbb6a6-7f67-4755-93c2-9c82f4368e9c
+md"""
+Our world is probabilistic, the probability turns out to be complex valued.
+
+1. If a computational system (or simulation) is deterministic, we say it is equivalent to a Turing Machine (TM).
+2. If a computational system is parameterized by a classical real valued probability, we say it is a equivalent to a Probabilistic Turing Machine (PTM). Although we need $2^{\# ~of ~bits}$ numbers to parameterize such system, we believe they can be easily simulated with pseudo-random numbers on a TM.
+3. If a computational system is parameterized by a complex valued probability, we say it is a equivalent to a Quantum Turing Machine (QTM). Simulating a QTM is NP-hard, and you need to store all $2^{\# ~of ~qubits}$ complex numbers.
+"""
+
+# ╔═╡ 8850540a-3ace-4d6e-817c-dbfc3e55f4dd
+md"""
+# Julia Quantum Ecosystem
+"""
+
+# ╔═╡ ed769b45-1712-4309-8ddd-120b31ca3568
+md"""
+A general truth about quantum simulation: general purposed v.s. larger scale
+
+* Open quantum systems (a few subsystems)
+    1. [QuantumOptics.jl](https://github.com/qojulia/QuantumOptics.jl): Library for the numerical simulation of closed as well as open quantum systems.
+* Circuit-based quantum simulation (~40 qubits)
+    1. [Yao.jl](https://github.com/QuantumBFS/Yao.jl)
+    2. [Bloqade.jl](https://github.com/QuEraComputing/Bloqade.jl): Package for the quantum computation and quantum simulation based on the neutral-atom architecture.
+    3. [Braket.jl](https://github.com/awslabs/Braket.jl): a Julia implementation of the Amazon Braket SDK allowing customers to access Quantum Hardware and Simulators.
+    4. [PastaQ.jl](https://github.com/GTorlai/PastaQ.jl): Package for Simulation, Tomography and Analysis of Quantum Computers
+* Quantum many-body system ($100$ to $\infty$ spins)
+    1. [ITensors.jl](https://github.com/ITensor/ITensors.jl): A Julia library for efficient tensor computations and tensor network calculations.
+    2. [QuantumLattices.jl](https://github.com/Quantum-Many-Body/QuantumLattices.jl): Julia package for the construction of quantum lattice systems.
+"""
 
 # ╔═╡ d935b67a-2e77-4837-9cef-175dcd84040f
 md"""
@@ -38,41 +80,44 @@ Yao is an open source framework that aims to empower quantum information researc
 * quantum algorithm design;
 * quantum software 2.0;
 * quantum computation education.
+
+## Reference
+[Luo X Z, Liu J G, Zhang P, et al. Yao. jl: Extensible, efficient framework for quantum algorithm design. Quantum, 2020, 4: 341.](http://quantum-journal.org/papers/q-2020-10-11-341/)
 """
 
 # ╔═╡ 415a253a-a976-4d66-800b-98c1ca3e860e
 LocalResource("images/YaoLogo.png")
 
-# ╔═╡ 4774f44d-4f61-4059-b37b-3069aad8f857
-LocalResource("images/logo_small.png", :width=>200)
+# ╔═╡ 9c651a0f-be52-46c4-803b-756d7d00a406
+md"""
+# Efficient full amplitude quantum simulation
+
+ProjectQ: simulate up to 45 qubits, with 0.5 Petabyte memory (Steiger et al, 2018).
+"""
+
+# ╔═╡ fdfb1ca6-e830-4c5c-8672-b42d0cb91a87
+LocalResource("images/qubitlimit.png")
+
+# ╔═╡ 86fd00e8-289d-48ca-8904-980fc1e8dc18
+md"""
+# Different circuit simulation tracks
+1. Low entangled state
+    * Markov, Igor L., and Yaoyun Shi. “Simulating Quantum Computation by Contracting Tensor Networks.” SIAM Journal on Computing 38, no. 3 (January 2008): 963–81. https://doi.org/10.1137/050644756.
+    * Kalachev, Gleb, Pavel Panteleev, and Man-Hong Yung. “Recursive Multi-Tensor Contraction for XEB Verification of Quantum Circuits,” 2021, 1–9.
+    * Pan, Feng, and Pan Zhang. “Simulation of Quantum Circuits Using the Big-Batch Tensor Network Method.” Physical Review Letters 128, no. 3 (January 19, 2022): 030501. https://doi.org/10.1103/PhysRevLett.128.030501.
+2. Noisy limit
+    * Gao, Xun, and Luming Duan. “Efficient Classical Simulation of Noisy Quantum Computation.” October 7, 2018. arXiv.1810.03176.
+    * Shao, Yuguo, Fuchuan Wei, Song Cheng, and Zhengwei Liu. “Simulating Quantum Mean Values in Noisy Variational Quantum Algorithms: A Polynomial-Scale Approach.” July 20, 2023. arXiv.2306.05804.
+"""
 
 # ╔═╡ b517c6b9-2897-418f-b056-a256acdeffe4
 md"""
-How to find 幺:
-https://github.com/QuantumBFS/Yao.jl
-
-How to find this tutorial:
-https://github.com/GiggleLiu/YaoTutorial
-
 Where to learn quantum algorithms:
 https://github.com/QuantumBFS/QuAlgorithmZoo.jl
 """
 
-# ╔═╡ f28bb8de-b3f5-40c8-8bcd-de0ad3312158
-LocalResource("images/fullstack.png", :width=>600)
-
 # ╔═╡ cc312d0b-a5f6-4fa7-ae06-50c43a05b157
 md"arXiv:1812.09167"
-
-# ╔═╡ cd0b1f53-0533-4a1d-8146-c5a7caef4f89
-md"""
-# Open source software in quantum computing
-
-arXiv: 1812.09167, arXiv: 1902.00991
-"""
-
-# ╔═╡ 9bf7f4ce-95ba-4aaf-98ec-9bffc0302485
-LocalResource("images/packagelist1.png")
 
 # ╔═╡ 9935877e-3cb0-46d8-a6bd-baa8efcaa5b7
 md"# Why Yao?"
@@ -101,39 +146,30 @@ md"""
 Here, $M$ is the number of parameters.
 
 In paper: "Variational quantum eigensolver with fewer qubits" (arXiv:1902.02663)
-![image.png](images/qmps.png)
 """
-
-# ╔═╡ 1616d408-616f-42a0-9c48-ed445e3276ef
-LocalResource("images/gatecount.png")
-
-# ╔═╡ 10ac46d2-0b8d-468f-b3cf-9e3438f783cc
-md"""
-### For M = 1000
-**SQUID**: 100ns per gate, 11.5 days
-
-**CPU**: 3GHz, 2.4 days (assume 6 qubits can be simulated with 64 operations, parallelism is not considered)
-
-**GPU**: 1GHz, 3000 threads, 3.6 min (NOTE! this is theoretical, in practise, it is more than 24 hours)
-"""
-
-# ╔═╡ b367bba6-f245-4a1c-bc9c-fa32c802d5f2
-LocalResource("images/qulacs_benchmark.png")
-
-# ╔═╡ d4ea12c2-4545-42d4-9b4c-86aa7611d812
-md"![image.png](attachment:image.png)"
 
 # ╔═╡ a61a214c-0a43-4a15-a5c8-72716fbf3111
 md"""
-# GPU performance (not batched)
-<img src="images/cudabench.png" width=800/>
+# Performance
+A parameterized quantum circuit with single qubit rotation and CNOT gates.
+Please refer the Yao paper for details about the benchmark targets.
+
+* Note: [CuYao.jl](https://github.com/QuantumBFS/CuYao.jl) is implemented with <600 lines of Julia code.
 """
 
-# ╔═╡ fb3b559f-15df-42ca-abf2-1484ed9332bb
+# ╔═╡ 0b4877e8-4378-428d-8913-024473b3d9e5
+LocalResource("images/benchmark.png")
+
+# ╔═╡ f4e496bc-4f34-4b28-bbfc-0f4709129b0e
 md"""
-# Yao stack: not all about performance
-![yaoarch](images/yaoarch.png)
+# YaoToEinsum
 """
+
+# ╔═╡ bf7643c4-bae0-4d77-9903-29943f2efe5a
+md"Julia slack > yao-dev"
+
+# ╔═╡ 182b6520-d423-4aa5-8ef0-5e16f28960f6
+LocalResource("images/yaotoeinsum-question.png")
 
 # ╔═╡ d1449d83-02ce-45d0-adfe-db86a5ece921
 md"""
@@ -768,26 +804,30 @@ version = "17.4.0+2"
 
 # ╔═╡ Cell order:
 # ╠═98d9b19c-5e0f-11ee-3910-a1fe8e7322f2
-# ╠═bd12b40f-cc40-4228-be36-fd14ba432e7d
+# ╟─bd12b40f-cc40-4228-be36-fd14ba432e7d
+# ╟─d0dd4e6b-5a48-47bc-80ef-fa994781ec1f
+# ╟─fdc43a5a-0d79-45d3-b2c7-283278901a7e
+# ╟─0f4e74f2-0b9f-4c1b-99c2-7c044e023d47
+# ╟─60bbb6a6-7f67-4755-93c2-9c82f4368e9c
+# ╟─8850540a-3ace-4d6e-817c-dbfc3e55f4dd
+# ╟─ed769b45-1712-4309-8ddd-120b31ca3568
 # ╟─d935b67a-2e77-4837-9cef-175dcd84040f
-# ╠═415a253a-a976-4d66-800b-98c1ca3e860e
-# ╟─4774f44d-4f61-4059-b37b-3069aad8f857
-# ╟─b517c6b9-2897-418f-b056-a256acdeffe4
-# ╠═f28bb8de-b3f5-40c8-8bcd-de0ad3312158
+# ╟─415a253a-a976-4d66-800b-98c1ca3e860e
+# ╟─9c651a0f-be52-46c4-803b-756d7d00a406
+# ╟─fdfb1ca6-e830-4c5c-8672-b42d0cb91a87
+# ╠═b517c6b9-2897-418f-b056-a256acdeffe4
 # ╟─cc312d0b-a5f6-4fa7-ae06-50c43a05b157
-# ╟─cd0b1f53-0533-4a1d-8146-c5a7caef4f89
-# ╟─9bf7f4ce-95ba-4aaf-98ec-9bffc0302485
 # ╟─9935877e-3cb0-46d8-a6bd-baa8efcaa5b7
 # ╟─8da7a6c0-087c-4815-8011-4ef96ba971e1
 # ╟─7290b6ee-fca8-4ad9-b9bd-d2833f04a21f
 # ╟─9a068de5-b3dd-491b-826d-4922a68924d2
 # ╟─72c3f5d4-a645-46ad-86b8-114df24ffb12
-# ╟─1616d408-616f-42a0-9c48-ed445e3276ef
-# ╟─10ac46d2-0b8d-468f-b3cf-9e3438f783cc
-# ╠═b367bba6-f245-4a1c-bc9c-fa32c802d5f2
-# ╠═d4ea12c2-4545-42d4-9b4c-86aa7611d812
-# ╠═a61a214c-0a43-4a15-a5c8-72716fbf3111
-# ╠═fb3b559f-15df-42ca-abf2-1484ed9332bb
+# ╟─a61a214c-0a43-4a15-a5c8-72716fbf3111
+# ╟─0b4877e8-4378-428d-8913-024473b3d9e5
+# ╟─f4e496bc-4f34-4b28-bbfc-0f4709129b0e
+# ╟─86fd00e8-289d-48ca-8904-980fc1e8dc18
+# ╟─bf7643c4-bae0-4d77-9903-29943f2efe5a
+# ╟─182b6520-d423-4aa5-8ef0-5e16f28960f6
 # ╟─d1449d83-02ce-45d0-adfe-db86a5ece921
 # ╟─4f6b0937-46f2-49d7-884a-b4922fcc967e
 # ╠═947fc8bf-bfcf-478c-b7c5-b235e71c4119
