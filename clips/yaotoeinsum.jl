@@ -1,7 +1,7 @@
 #== QFT simulation with Tensor Networks ==#
 using YaoToEinsum, Yao
 
-nqubits = 28
+nqubits = 33
 
 qft = EasyBuild.qft_circuit(nqubits);
 

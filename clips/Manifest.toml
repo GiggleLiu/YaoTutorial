@@ -801,9 +801,13 @@ version = "0.6.6"
 
 [[deps.YaoToEinsum]]
 deps = ["LinearAlgebra", "OMEinsum", "Yao"]
-git-tree-sha1 = "a4cb642411b1dd1e57d0f7a455ee7bc51316afe6"
+path = "/home/jinguoliu/.julia/dev/YaoToEinsum"
 uuid = "9b173c7b-dc24-4dc5-a0e1-adab2f7b6ba9"
-version = "0.2.0"
+version = "0.2.1"
+weakdeps = ["CUDA"]
+
+    [deps.YaoToEinsum.extensions]
+    YaoToEinsumCUDAExt = "CUDA"
 
 [[deps.Zlib_jll]]
 deps = ["Libdl"]
