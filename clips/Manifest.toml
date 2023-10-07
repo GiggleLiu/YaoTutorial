@@ -61,7 +61,7 @@ uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
 
 [[deps.AsciinemaGenerator]]
 deps = ["InteractiveUtils", "JuliaSyntax", "REPL"]
-path = "/home/leo/.julia/dev/AsciinemaGenerator"
+path = "/home/jinguoliu/.julia/dev/AsciinemaGenerator"
 uuid = "126a0909-f052-481b-a318-ea548fff52bb"
 version = "0.1.0"
 
