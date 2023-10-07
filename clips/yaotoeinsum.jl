@@ -1,18 +1,20 @@
 #== QFT simulation with Tensor Networks ==#
-using YaoToEinsum
+using YaoToEinsum, Yao
 
-qft20 = EasyBuild.qft_circuit(28);
+nqubits = 28
+
+qft = EasyBuild.qft_circuit(nqubits);
 
 # convert to tensor network and optimize the contraction order
-tensornetwork = YaoToEinsum.yao2einsum(qft20;
-    initial_state=Dict([i=>0 for i in 1:20]),
-    final_state=Dict([i=>0 for i in 1:20])
+tensornetwork = YaoToEinsum.yao2einsum(qft;
+    initial_state=Dict([i=>0 for i in 1:nqubits]),
+    final_state=Dict([i=>0 for i in 1:nqubits])
     )
     
 # using the slicing technique to reduce space complexity
-tensornetwork = YaoToEinsum.yao2einsum(qft20;
-    initial_state=Dict([i=>0 for i in 1:20]),
-    final_state=Dict([i=>0 for i in 1:20]),
+tensornetwork = YaoToEinsum.yao2einsum(qft;
+    initial_state=Dict([i=>0 for i in 1:nqubits]),
+    final_state=Dict([i=>0 for i in 1:nqubits]),
     optimizer=YaoToEinsum.TreeSA(nslices=3)
     )
 
