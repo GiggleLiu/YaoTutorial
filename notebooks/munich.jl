@@ -4,16 +4,6 @@
 using Markdown
 using InteractiveUtils
 
-# This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
-macro bind(def, element)
-    quote
-        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
-        local el = $(esc(element))
-        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
-        el
-    end
-end
-
 # ╔═╡ 98d9b19c-5e0f-11ee-3910-a1fe8e7322f2
 using PlutoUI
 
@@ -23,14 +13,8 @@ using Yao, YaoPlots; YaoPlots.darktheme!();
 # ╔═╡ 869332bd-b70e-4812-83b4-6f3bc8b1d458
 using SymEngine
 
-# ╔═╡ e4c88a2e-ac5e-4c0c-b894-47c629289e9a
-using YaoToEinsum
-
 # ╔═╡ 46aa38fa-47ab-4c44-8bcb-655bd5ca70a6
 using KrylovKit
-
-# ╔═╡ eb164249-b1a4-4b08-b4bb-b27ccdb9ff6b
-using CuYao
 
 # ╔═╡ bd12b40f-cc40-4228-be36-fd14ba432e7d
 begin
@@ -54,8 +38,17 @@ begin
 end;
 
 # ╔═╡ d0dd4e6b-5a48-47bc-80ef-fa994781ec1f
-md"# The link to this notebook: 
-[https://raw.githubusercontent.com/GiggleLiu/YaoTutorial/master/notebooks/munich.jl](https://raw.githubusercontent.com/GiggleLiu/YaoTutorial/master/notebooks/munich.jl)"
+md"""# About This notebook
+This is a notebook about the quantum simulator [Yao@v0.8](https://github.com/QuantumBFS/Yao.jl), which could be download with the following link:
+[https://raw.githubusercontent.com/GiggleLiu/YaoTutorial/master/notebooks/munich.jl](https://raw.githubusercontent.com/GiggleLiu/YaoTutorial/master/notebooks/munich.jl)
+
+### Contents
+1. Overview of quantum simulation.
+2. Why we create Yao.
+3. Current status of Yao.
+4. A tutorial, covering latest Yao features.
+5. Outlook.
+"""
 
 # ╔═╡ fdc43a5a-0d79-45d3-b2c7-283278901a7e
 md"""
@@ -95,24 +88,6 @@ A general truth about quantum simulation: general purposed v.s. larger scale
     2. [QuantumLattices.jl](https://github.com/Quantum-Many-Body/QuantumLattices.jl): Julia package for the construction of quantum lattice systems.
 """
 
-# ╔═╡ d935b67a-2e77-4837-9cef-175dcd84040f
-md"""
-# 幺（Yao）
-Yao Extensible, Efficient Quantum Algorithm Design for Humans.
-
-Yao is an open source framework that aims to empower quantum information research with software tools. It is designed with following in mind:
-
-* quantum algorithm design;
-* quantum software 2.0;
-* quantum computation education.
-
-## Reference
-[Luo X Z, Liu J G, Zhang P, et al. Yao. jl: Extensible, efficient framework for quantum algorithm design. Quantum, 2020, 4: 341.](http://quantum-journal.org/papers/q-2020-10-11-341/)
-"""
-
-# ╔═╡ 415a253a-a976-4d66-800b-98c1ca3e860e
-LocalResource("images/YaoLogo.png")
-
 # ╔═╡ 9c651a0f-be52-46c4-803b-756d7d00a406
 md"""
 # Efficient full amplitude quantum simulation
@@ -125,15 +100,58 @@ LocalResource("images/qubitlimit.png")
 
 # ╔═╡ cc312d0b-a5f6-4fa7-ae06-50c43a05b157
 md"### References:
+* [Steiger D S, Häner T, Troyer M. ProjectQ: an open source software framework for quantum computing[J]. Quantum, 2018, 2: 49.](https://quantum-journal.org/papers/q-2018-01-31-49/?wp_statistics_opt_out=1)
 * [De Raedt, Hans, Fengping Jin, Dennis Willsch, Madita Nocon, Naoki Yoshioka, Nobuyasu Ito, Shengjun Yuan, and Kristel Michielsen. “Massively Parallel Quantum Computer Simulator, Eleven Years Later.” Computer Physics Communications 237 (April 2019): 47–61.](https://doi.org/10.1016/j.cpc.2018.11.005)"
 
+# ╔═╡ d935b67a-2e77-4837-9cef-175dcd84040f
+md"""
+# Yao.jl
+An Extensible, Efficient Quantum Algorithm Design for Humans.
+
+Yao is an open source framework that aims to empower quantum information research with software tools. It is designed with following in mind:
+
+* quantum algorithm design;
+* quantum software 2.0;
+* quantum computation education.
+
+### Reference
+* [Xiu-Zhe Luo, Jin-Guo Liu, Pan Zhang and Lei Wang. Yao. jl: Extensible, efficient framework for quantum algorithm design. Quantum, 2020, 4: 341.](http://quantum-journal.org/papers/q-2020-10-11-341/)
+"""
+
+# ╔═╡ 415a253a-a976-4d66-800b-98c1ca3e860e
+LocalResource("images/YaoLogo.png")
+
+# ╔═╡ a12aa313-f051-4f83-ac89-e3ab5685c5c8
+md"The Chinese character 幺 (Yāo) mean unitary."
+
 # ╔═╡ 9935877e-3cb0-46d8-a6bd-baa8efcaa5b7
-md"# Why Yao?"
+md"# Why yet another quantum simulator?"
+
+# ╔═╡ 61c3c643-dae3-4563-a85d-9daf07ff6060
+dispatch!(EasyBuild.variational_circuit(5, 1), :random) |> vizcircuit
 
 # ╔═╡ a01484e7-0710-4de1-aa81-92e083884902
 md"""Differential programming a quantum circuit
 * Inverse engineering, such as quantum optimal control
 * Variational quantum algorithms
+"""
+
+# ╔═╡ 8da7a6c0-087c-4815-8011-4ef96ba971e1
+md"""
+# Variational Quantum Algorithms
+1. Quantum Circuit Born Machine: Using a quantum circuit as a probabilistic model $p(x) = |\langle x|\psi\rangle|^2$.
+    - **Loss function**: maximum mean discrepancy between $|\langle x|\psi\rangle|^2$ and the target probability. 
+2. Variational Quantum Eigensolver: Solving the ground state of a quantum system.
+    - **Loss function**: The energy expectation value.
+3. Variational quantum optimization algorithms: Solving computational hard problems through variationally optimizing the annealing process.
+    - **Loss function**: The success probability of finding an optimal solution.
+
+### References
+- [Kandala A, Mezzacapo A, Temme K, et al. Hardware-efficient variational quantum eigensolver for small molecules and quantum magnets. nature, 2017, 549(7671): 242-246.](https://www.nature.com/articles/nature23879)
+- [Liu, Jin-Guo, and Lei Wang. “Differentiable Learning of Quantum Circuit Born Machines.” Physical Review A 98, no. 6 (December 19, 2018): 062324.](https://doi.org/10.1103/PhysRevA.98.062324)
+- [Liu, Jin-Guo, Yi-Hong Zhang, Yuan Wan, and Lei Wang. “Variational Quantum Eigensolver with Fewer Qubits.” Physical Review Research 1, no.](https://journals.aps.org/prresearch/abstract/10.1103/PhysRevResearch.1.023025) 
+- [Ebadi, S., A. Keesling, M. Cain, T. T. Wang, H. Levine, D. Bluvstein, G. Semeghini, et al. “Quantum Optimization of Maximum Independent Set Using Rydberg Atom Arrays.” Science 376, no. 6598 (June 10, 2022): 1209–15.](https://doi.org/10.1126/science.abo6587)
+
 """
 
 # ╔═╡ e2d493c4-0060-46f3-a689-613058f6e293
@@ -145,24 +163,15 @@ md"""
 md"""
 * **Loss function**: the distance with the target gate.
 * **Parameters**: the evolution times of each pulse.
-* **References**: [Levine, Harry, Alexander Keesling, Giulia Semeghini, Ahmed Omran, Tout T. Wang, Sepehr Ebadi, Hannes Bernien, et al. “Parallel Implementation of High-Fidelity Multiqubit Gates with Neutral Atoms.” Physical Review Letters 123, no. 17 (2019): 1–16.](https://doi.org/10.1103/PhysRevLett.123.170503)
 """
 
 # ╔═╡ c46a0e9c-729d-4a8a-b70c-78b53fbab597
 LocalResource("images/levine.png")
 
-# ╔═╡ 8da7a6c0-087c-4815-8011-4ef96ba971e1
+# ╔═╡ f7d01385-f32a-4fcd-bbea-7789674106a7
 md"""
-# Variational Quantum Algorithms
-1. Quantum Circuit Born Machine: Using a quantum circuit as a probabilistic model $p(x) = |\langle x|\psi\rangle|^2$.
-    - **Loss function**: maximum mean discrepancy between $|\langle x|\psi\rangle|^2$ and the target probability. 
-    - **References**: [Liu, Jin-Guo, and Lei Wang. “Differentiable Learning of Quantum Circuit Born Machines.” Physical Review A 98, no. 6 (December 19, 2018): 062324.](https://doi.org/10.1103/PhysRevA.98.062324)
-2. Variational Quantum Eigensolver: Solving the ground state of a quantum system.
-    - **Loss function**: The energy expectation value.
-    - **References**: [Liu, Jin-Guo, Yi-Hong Zhang, Yuan Wan, and Lei Wang. “Variational Quantum Eigensolver with Fewer Qubits.” Physical Review Research 1, no. 2 (September 24, 2019): 023025.](https://doi.org/10.1103/PhysRevResearch.1.023025)
-3. Variational quantum optimization algorithms: Solving computational hard problems through variationally optimizing the annealing process.
-    - **Loss function**: The success probability of finding an optimal solution.
-    - **References**: [Ebadi, S., A. Keesling, M. Cain, T. T. Wang, H. Levine, D. Bluvstein, G. Semeghini, et al. “Quantum Optimization of Maximum Independent Set Using Rydberg Atom Arrays.” Science 376, no. 6598 (June 10, 2022): 1209–15.](https://doi.org/10.1126/science.abo6587)
+### References
+- [Levine, Harry, Alexander Keesling, Giulia Semeghini, Ahmed Omran, Tout T. Wang, Sepehr Ebadi, Hannes Bernien, et al. “Parallel Implementation of High-Fidelity Multiqubit Gates with Neutral Atoms.” Physical Review Letters 123, no. 17 (2019): 1–16.](https://doi.org/10.1103/PhysRevLett.123.170503)
 """
 
 # ╔═╡ 4457c6b8-a8e9-4853-a07a-1829d95be92e
@@ -183,7 +192,7 @@ LocalResource("images/yaoad.png")
 # ╔═╡ a61a214c-0a43-4a15-a5c8-72716fbf3111
 md"""
 # Performance
-A parameterized quantum circuit with single qubit rotation and CNOT gates.
+We benchmarked the simulation of a parameterized quantum circuit with single qubit rotation and CNOT gates.
 Please refer the Yao paper for details about the benchmark targets.
 
 * Note: [CuYao.jl](https://github.com/QuantumBFS/CuYao.jl) is implemented with <600 lines of Julia code.
@@ -200,6 +209,7 @@ md"""
 # ╔═╡ b8cd9d6f-934f-4053-9d32-2535ce9d9f2c
 md"""
 ### Yao@v0.6
+* Quantum simulation
 * Matrix representation of quantum operators
 * Arithematic operations
 * Parameter management and automatic differentiation
@@ -209,20 +219,74 @@ md"""
 # ╔═╡ b2b16731-9410-4be1-ae6e-6467547c3e81
 LocalResource("images/yaofeature.png")
 
+# ╔═╡ e5312611-6c4c-4f51-aea0-9eb61cbb217a
+md"# Current status of Yao.jl"
+
 # ╔═╡ ef06e741-fe88-42b5-9063-1306b00f3915
 md"""
-### Yao@v0.8
+###  Extra features in Yao@v0.8
 * qudits: natively supported (motivated by 3-level Rydberg atom simulation)
 * density matrix based simulation
 * operator indexing
 
-*Community packages*
+### Community packages
 * [Bloqade.jl](https://github.com/QuEraComputing/Bloqade.jl): Package for the quantum computation and quantum simulation based on the neutral-atom architecture (Roger Luo, [QuEra Computing Inc.](https://www.quera.com/) et al.)
 ![](https://github.com/QuEraComputing/Bloqade.jl/raw/master/docs/src/assets/logo-dark.png)
 * [YaoToEinsum.jl](https://github.com/QuantumBFS/YaoToEinsum.jl): Convert Yao circuit to OMEinsum (tensor network) contraction (GiggleLiu et al.)
 * [YaoPlots.jl](https://github.com/QuantumBFS/YaoPlots.jl): plotting Yao circuit (GiggleLiu et al.)
 * [ZXCalculus.jl](https://github.com/QuantumBFS/ZXCalculus.jl): An implementation of ZX-calculus in Julia (Chen Zhao, Roger Luo, Yusheng Zhao (through [OSPP project](https://summer-ospp.ac.cn/)) et al.)
 * [FLOYao.jl](https://github.com/QuantumBFS/FLOYao.jl): A fermionic linear optics simulator backend for Yao.jl (Jan Lukas Bosse et al)
+"""
+
+# ╔═╡ 8b1915e3-63f8-461e-bdb1-4c257aa4d438
+md"""# Papers citing Yao
+Google scholar: up to Oct 7, 2023, Yao paper has $(highlight("127")) citations in total 🎉.
+### Related quantum simulators
+- Pennylane: Automatic differentiation of hybrid quantum-classical computations
+- Tensorflow quantum: A software framework for quantum machine learning
+- Qulacs: a fast and versatile quantum circuit simulator for research purpose
+- Qibo: a framework for quantum simulation with hardware acceleration
+- Tequila: A platform for rapid development of quantum algorithms
+- Qdnn: deep neural networks with quantum layers
+- TenCirChem: An Efficient Quantum Computational Chemistry Package for the NISQ Era
+- QuantumCumulants.jl: A Julia framework for generalized mean-field equations in open quantum systems
+- Q$^2$Chemistry: A quantum computation platform for quantum chemistry
+- QNet: A scalable and noise-resilient quantum neural network architecture for noisy intermediate-scale quantum computers
+- Qforte: an efficient state simulator and quantum algorithms library for molecular electronic structure
+- QuantNBody: a Python package for quantum chemistry and physics to build and manipulate many-body operators and wave functions.
+- UniQ: a unified programming model for efficient quantum circuit simulation
+- tqix.pis: A toolbox for quantum dynamics simulation of spin ensembles in Dicke basis
+- BosonSampling.jl: A Julia package for quantum multi-photon interferometry
+- QDNN: DNN with quantum neural network layers
+- TeD-Q: a tensor network enhanced distributed hybrid quantum machine learning framework
+- QXTools: A Julia framework for distributed quantum circuit simulation
+- Heom.jl: An efficient Julia framework for hierarchical equations of motion in open quantum systems
+- QUBO. jl: A Julia Ecosystem for Quadratic Unconstrained Binary Optimization
+- HiQ-ProjectQ: Towards user-friendly and high-performance quantum computing on GPUs
+- HyQuas: hybrid partitioner based quantum circuit simulation system on GPU
+### How do people use Yao?
+- Variational quantum algorithms
+    - Variational Quantum Eigensolvers, Quantum Neural networks, Quantum Approximate Optimization Algorithm, Solving differential equation, Quantum kernel method
+- $(highlight("Fermionic simulation"))
+    - [Sketching phase diagrams using low-depth variational quantum algorithms](https://arxiv.org/abs/2301.09369)
+- $(highlight("Combinatorial optimization"))
+    - [Tropical Tensor Network for Ground States of Spin Glasses](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.126.090506)
+- Measurement induced phase transition
+    - [Simulating a measurement-induced phase transition for trapped ion circuits](measurement-induced phase transition)
+- Imaginary time evolution
+    - [Probabilistic nonunitary gate in imaginary time evolution](https://link.springer.com/article/10.1007/s11128-021-03145-6)
+    - [Efficient quantum imaginary time evolution by drifting real time evolution: an approach with low gate and measurement complexity](https://arxiv.org/abs/2203.11112)
+- $(highlight("Tensor network based simulation"))
+    - [Efficient and Portable Einstein Summation in SQL](https://dl.acm.org/doi/pdf/10.1145/3589266)
+    - [Contracting Arbitrary Tensor Networks: General Approximate Algorithm and Applications in Graphical Models and Quantum Circuit Simulations](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.125.060503)
+- Quantum Chebyshev Transform
+    - [Quantum Chebyshev Transform: Mapping, Embedding, Learning and Sampling Distributions](https://arxiv.org/abs/2306.17026)
+- Geologic fracture networks
+    - [Quantum algorithms for geologic fracture networks](https://www.nature.com/articles/s41598-023-29643-4) 
+- $(highlight("Teaching"))
+    - [Using the Julia framework to teach quantum entanglement](https://arxiv.org/abs/2302.12889)
+- Hamiltonian Operator Approximation
+    - [Hamiltonian Operator Approximation for Energy Measurement and Ground-State Preparation](https://journals.aps.org/prxquantum/abstract/10.1103/PRXQuantum.2.030318)
 """
 
 # ╔═╡ a5eeccdc-73cc-4e99-884b-a04e827cc4bf
@@ -234,10 +298,7 @@ md"""
 md"# Part 1: Representing a quantum state"
 
 # ╔═╡ b7d014b8-2c13-4ab0-8477-4d3284bc8f2d
-zero_state(3)
-
-# ╔═╡ f62a34f1-fdcc-4163-865c-0d0b6c0d091b
-# Create a 3-qubit zero state
+# create a zero state |000⟩
 zero_state(3)
 
 # ╔═╡ ad652d3e-a53e-4076-a1b0-e7ca7bd0d270
@@ -257,6 +318,10 @@ product_state(bit"110")
 # A GHZ state
 ghz_state(3)
 
+# ╔═╡ 2668cdd7-c83a-444e-9582-3d25fbdecd67
+# there is a single bit entanglement entropy between qubit sets (1, 3) and (2,)
+von_neumann_entropy(ghz_state(3), (1, 3)) / log(2)
+
 # ╔═╡ d04826f5-e9a2-49cd-9f07-9d0cd4029fdb
 # A random qutrit state
 rand_state(3, nlevel=3)
@@ -268,19 +333,24 @@ product_state(dit"120;3")
 # ╔═╡ 0e93dd67-8831-4cf0-9802-835e7b30e2f5
 md"""
 # Part 2: representing a quantum circuit
-A quantum operator is represented as a matrix, or a Yao block.
-There are two types of blocks: primitive blocks and composite blocks.
+A quantum operators such as Hamiltonians and quantum circuits, are represented as a matrix, or a Yao block. There are two types of blocks:
+* primitive blocks: the basic building blocks of a quantum circuit.
+* composite blocks: composing primitive blocks into Hamiltonians and circuits
 """
 
 # ╔═╡ 295c6f45-0d97-42bc-b677-96ecbd124f37
 md"""
-## Section 2.1: Primitive blocks
+## Part 2.1: Primitive blocks
 Primitive blocks are the basic building blocks of a quantum circuit.
 """
 
 # ╔═╡ 4fd3761c-16fc-4833-97d4-6ef07c54a0bc
 # Pauli X gate
 X
+
+# ╔═╡ f26cc2ed-cb29-43d9-a216-2ea3da27516f
+# visualize a gate
+vizcircuit(X)
 
 # ╔═╡ b8924ea4-32e4-4d3a-9370-33987b8aefec
 # create a symbolic variable θ
@@ -289,6 +359,12 @@ X
 # ╔═╡ aa0cc0fe-fb25-4e6b-82b4-0bd70d41c36d
 # Rotation X gate
 rot(X, θ)
+
+# ╔═╡ b8b7eed2-430c-401c-a026-cb6f44d2d4f6
+parameters(rot(X, θ))
+
+# ╔═╡ 3d79dc1c-082a-43fc-8037-d988eb3a81a6
+vizcircuit(rot(X, θ))
 
 # ╔═╡ 935c518b-7a7f-485c-b37b-cb165e6ee77b
 # The matrix representation
@@ -303,9 +379,15 @@ mat(rot(SWAP, θ))
 # Phase gate
 mat(phase(θ))
 
+# ╔═╡ 870bd2cd-2cf8-475d-b1d9-ce6113af5efb
+vizcircuit(phase(θ))
+
 # ╔═╡ 4b9997ce-b45d-40ca-934e-ef72acea4e7d
 # Shift gate
 mat(shift(θ))
+
+# ╔═╡ abfb7c6a-ac95-4a84-8dcd-c5a58af21c7e
+vizcircuit(shift(θ))
 
 # ╔═╡ 421f365a-599b-4b84-874f-4e9298721720
 # random single qubit matrix block
@@ -313,11 +395,17 @@ matblock(rand_unitary(2); tag="random_gate")
 
 # ╔═╡ 9c84936d-d678-4077-9423-dbb42629d6e2
 # random 2 qutrit matrix block
-matblock(rand_unitary(9); nlevel=3, tag="2x3-level")
+matblock(rand_unitary(9); nlevel=3, tag="two 3-level")
+
+# ╔═╡ 6ee0a7d3-0453-4426-a58e-ad27ba56e7f9
+vizcircuit(matblock(rand_unitary(9); nlevel=3, tag="two 3-level"))
 
 # ╔═╡ 6deb86e7-07de-4c2b-9ab8-8005e57582b6
 # random 2 qutrit matrix block
 Measure(2)
+
+# ╔═╡ 2c4c0aac-8919-41c6-bb8f-b7bea5d2f759
+vizcircuit(Measure(2))
 
 # ╔═╡ 4768ac25-62ed-42ae-a0c6-c039dabdbdae
 # Time evolution, the first argument can be any Hermitian operator
@@ -325,17 +413,22 @@ time_evolve(X, 0.3)
 
 # ╔═╡ 96192c95-da9a-42ad-8acb-d93e1f348a34
 md"""
-## Section 2.2: Composite blocks
+## Part 2.2: Composite blocks
 """
 
 # ╔═╡ abe87acc-29fb-4b64-9adb-d7a9b59b1ded
 # Put a block at the first qubit of a 3-qubit register
-
 put(3, 1=>X)
+
+# ╔═╡ 2b6622a7-f37b-4c66-b73d-3309570252e2
+vizcircuit(put(3, 1=>X))
 
 # ╔═╡ 2a7a0629-678c-43d7-9f84-f82e2207c192
 # The target gate can be applied on any subset of qubits
 put(10, (5, 2, 1) => ConstGate.Toffoli)
+
+# ╔═╡ 9451d2e5-e592-4ccd-b081-554d29891488
+vizcircuit(put(10, (5, 2, 1) => ConstGate.Toffoli))
 
 # ╔═╡ cacfd179-1c09-4048-bf55-d95ac30a20b8
 # Kronecker product of two blocks
@@ -345,9 +438,15 @@ kron(X, X)
 # A more general form can be
 kron(10, 2=>X, 3=>Y)
 
+# ╔═╡ 4171ac27-2d56-4699-b816-300a56da94ec
+vizcircuit(kron(10, 2=>X, 3=>Y))
+
 # ╔═╡ 3cfa909e-935c-4f41-9b32-fe86aef0026e
 # Control the second qubit of a 3-qubit register with the first qubit
 control(3, 1, 2=>X)
+
+# ╔═╡ d1f688c1-5b01-4823-95ab-e405b826b9fc
+vizcircuit(control(3, 1, 2=>X))
 
 # ╔═╡ ef656866-203e-4963-b575-b5de53aaac1a
 # Multi-control and inverse control is supported
@@ -355,9 +454,15 @@ control(3, 1, 2=>X)
 # apply 2-qubit gate `kron(H, Rz(π/4))` on position (7, 6).
 control(10, (1, -8), (7, 6)=>kron(H, Rz(π/4)))
 
+# ╔═╡ b2b7db90-1d65-46f9-a171-8d7b3b48a97f
+vizcircuit(control(10, (1, -8), (7, 6)=>kron(H, Rz(π/4))))
+
 # ╔═╡ 4dfc08fd-8a10-4d25-a273-a5c0e72df78e
 # Chain two blocks into a circuit
 chain(3, put(3, 1=>X), control(3, 1, 2=>X))
+
+# ╔═╡ f3bf77bc-2783-4ec4-b2ec-9fc07c73bdbb
+vizcircuit(chain(3, put(3, 1=>X), control(3, 1, 2=>X)))
 
 # ╔═╡ 337786c2-5d28-4c3c-976b-1b3bc21f32e5
 # It is equivalent to inverse ordered operator multiplication.
@@ -373,7 +478,7 @@ sum([kron(3, 1=>X, 2=>X), kron(3, 2=>X, 3=>X)])
 
 # ╔═╡ 8dd52837-f6d1-4f56-b071-6a1ad4a18be7
 md"""
-# Part 3: quantum Fourier transformation simulation (QFT)
+# Example: quantum Fourier transformation simulation (QFT)
 """
 
 # ╔═╡ 399e2661-0b84-445a-97fc-da16884ac3ae
@@ -387,6 +492,9 @@ md"*Step by step*"
 # Let's first define the CPHASE gate
 cphase(n, i, j) = control(n, i, j=> shift(2π/(2^(i-j+1))));
 
+# ╔═╡ 04b50a5b-8e57-461b-9bad-103ef3ed645a
+vizcircuit(cphase(5, 2, 1))
+
 # ╔═╡ a8d42876-4a32-4eb7-9dd1-eb93d1033be2
 # A cphase is defined as
 mat(control(2, 2, 1=> shift(θ)))
@@ -394,12 +502,18 @@ mat(control(2, 2, 1=> shift(θ)))
 # ╔═╡ bebc0c44-e3d5-4c36-8ed8-f132e14ab8b3
 hcphases(n, i) = chain(n, i==j ? put(n, i=>H) : cphase(n, j, i) for j in i:n);
 
+# ╔═╡ 779d209e-cdb0-4e35-adf7-e59c27bebf52
+vizcircuit(hcphases(5, 2))
+
 # ╔═╡ 342467fb-9fc5-4f8c-bc1f-6c816848b56f
 # with CPHASE gate, we have the qft circuit defined as
 qft_circ(n::Int) = chain(n, hcphases(n, i) for i = 1:n)
 
 # ╔═╡ aa4370c0-f83c-469b-b1c8-beb88c56f815
 qft = qft_circ(3)
+
+# ╔═╡ 59eb71ea-023f-4ef9-81e2-f01839d60669
+vizcircuit(qft)
 
 # ╔═╡ 0087779d-8f26-49ac-81df-bb6915249d9a
 # Let us check the matrix representation
@@ -419,6 +533,9 @@ isreflexive(qft)
 # The dagger of qft is the inverse-qft
 iqft = qft'
 
+# ╔═╡ e7f73769-823c-4dce-af96-f5440de2667a
+vizcircuit(iqft)
+
 # ╔═╡ 77dbc06a-7a1c-4de7-9f37-cee57863c7c3
 # Run the circuit
 reg3 = product_state(bit"011")
@@ -432,9 +549,6 @@ copy(out) |> iqft ≈ reg3
 # ╔═╡ 5ae36501-c44f-4e37-9aa2-5a844e1d78e2
 # Measure the output (without collapsing state)
 resqft3 = measure(out; nshots=10)
-
-# ╔═╡ bacf498b-c391-46ce-9876-0a8fdf878d99
-X |> vizcircuit
 
 # ╔═╡ 87e285b0-6029-4def-b47f-63472c493aa8
 # Measure the output and collapsing state
@@ -451,31 +565,13 @@ reg20 = rand_state(20)
 # ╔═╡ c49a3d96-ed54-40fa-8be2-c38bced18636
 apply(reg20, subroutine(20, qft, (4,6,7)))
 
-# ╔═╡ 371fc7e0-d66c-497b-92f4-213e846c9645
-qft20 = qft_circ(20);
-
-# ╔═╡ 2d012753-231b-47e9-91e9-33a55c2de314
-@bind convert_to_tnet CheckBox()
-
-# ╔═╡ ee464349-8263-4688-8aa3-6d184f5b076c
-# convert to tensor network and optimize the contraction order
-tensornetwork = YaoToEinsum.yao2einsum(qft20;
-    initial_state=Dict([i=>0 for i in 1:20]),
-    final_state=Dict([i=>0 for i in 1:20]),
-    optimizer=YaoToEinsum.TreeSA(nslices=3)
-    )
-
-# ╔═╡ 3d2427af-f203-4818-9656-6d59def5baba
-# compute!
-contract(tensornetwork)
-
 # ╔═╡ b7883e83-536b-4641-817f-3a0f643b4393
 md"""
-# Section 4: Simulate variational quantum algorithms
+# Example: Simulate a variational quantum algorithms
 """
 
 # ╔═╡ 9a8a739e-6e5b-4fe0-b363-c56396de9914
-nbit = 16
+nbit = 10
 
 # ╔═╡ c1b1bf1d-961d-455f-89bf-461d2658731a
 # the hamiltonian
@@ -486,42 +582,43 @@ hami = EasyBuild.heisenberg(nbit)
 hmat = mat(hami)
 
 # ╔═╡ 92e266c9-0bdd-4fae-b3ca-291ba13d70c4
-eg, vg = eigsolve(hmat, 1, :SR)
-
-# imaginary time evolution
-
-# ╔═╡ 66e7b8b4-e090-416c-a066-729a6b461b36
-te = time_evolve(hami |> cache, -10im)
-
-# ╔═╡ 72ed3e7c-8f59-4267-90d7-17329e9865f5
-reg = rand_state(nbit)
-
-# ╔═╡ 53091912-f495-4529-a4fa-e88dbb2769ab
-energy(reg) = real(expect(hami, reg))
-
-# ╔═╡ 3df4f2c8-a5a5-4b8c-901a-d054168b1af3
-energy(reg)
-
-# ╔═╡ e30bb8bc-28b1-46a6-9d8b-056b226b0450
-reg |> te |> normalize!
-
-# ╔═╡ 1f062228-6ce3-4204-8d00-c30b1edb722d
-energy(reg)
+# `eigsolve` is for solving dominant eigenvalue problem of the target Hamiltonian
+# the second argument `1` means converging at least one eigenvectors.
+# the thrid argument `:SR` means finding the eigenvalue with the smallest real part.
+eg, vg = KrylovKit.eigsolve(hmat, 1, :SR)
 
 # ╔═╡ 16b8b24a-aa45-482a-9e99-403d9acf3895
 # variational quantum circuit
-vcirc = EasyBuild.variational_circuit(nbit)
+vcirc = dispatch(EasyBuild.variational_circuit(nbit), :random)
 
-# ╔═╡ dea1a4cc-22c4-4d50-b6dd-7531df5fc5b6
-# set circuit parameters to random
-dispatch!(vcirc, :random)
+# ╔═╡ 18939877-3e04-4d54-bcf4-cadaa0f58e4b
+vizcircuit(vcirc)
+
+# ╔═╡ 4126923d-8041-4473-a7b1-179e7c09c1f1
+# energy expectation value as the loss
+expect(hami, zero_state(nbit) => vcirc)
+
+# ╔═╡ 49dc13a7-e9ac-481f-8b87-2873f7f102c3
+# differentiate the energy function
+# the return value is a pair: (gradient of initial state, gradient of circuit parameters)
+expect'(hami, zero_state(nbit) => vcirc)
 
 # ╔═╡ 1abc7199-423b-46d0-8610-87bbbe5b36ab
-for i=1:100
-    regδ, paramsδ = expect'(hami, zero_state(16)=>vcirc)
-    dispatch!(-, vcirc, 0.1*paramsδ)
-    @show energy(zero_state(nbit) |> vcirc)
+function train_vcirc(vcirc; nstep)
+	for i = 1:nstep
+		# compute gradient
+	    regδ, paramsδ = expect'(hami, zero_state(nbit)=>vcirc)
+		# update parameters with gradient descent, check Optim.jl for advanced gradient based optimizers, such as BFGS.
+	    vcirc = dispatch(-, vcirc, 0.1*paramsδ)
+		# show the loss
+		energy = real(expect(hami, zero_state(nbit) => vcirc))
+	    @info "Mean energy at step $i is $energy"
+	end
+	return vcirc
 end
+
+# ╔═╡ b7b8219d-bf14-4508-b508-ed0b24ec5183
+train_vcirc(vcirc; nstep=100)
 
 # ╔═╡ 4697607a-5d39-4548-b5aa-ad9e2427aa02
 md"""
@@ -532,6 +629,8 @@ md"""
 md"""The following live coding simulates a QFT circuit on GPU. It requires
 * A GPU with CUDA support
 * Julia package [`CuYao.jl`](https://github.com/QuantumBFS/CuYao.jl)
+
+Source code is available in file: `clips/yao-v0.8-cuda.jl`
 """
 
 # ╔═╡ 8a8b9b55-84a8-482c-a519-20a0be664275
@@ -542,23 +641,26 @@ md"""
 # YaoToEinsum
 """
 
-# ╔═╡ 86fd00e8-289d-48ca-8904-980fc1e8dc18
+# ╔═╡ 6237ef80-8efb-4df0-95c4-22197b85f248
 md"""
 # Different circuit simulation tracks
-Except the few qubit limit, there are two limits that quantum systems are simulatable by a classical computing device.
-
-[plot - two simulatable limit]
-1. Low entangled state
-    * Markov, Igor L., and Yaoyun Shi. “Simulating Quantum Computation by Contracting Tensor Networks.” SIAM Journal on Computing 38, no. 3 (January 2008): 963–81. https://doi.org/10.1137/050644756.
-    * Kalachev, Gleb, Pavel Panteleev, and Man-Hong Yung. “Recursive Multi-Tensor Contraction for XEB Verification of Quantum Circuits,” 2021, 1–9.
-    * Pan, Feng, and Pan Zhang. “Simulation of Quantum Circuits Using the Big-Batch Tensor Network Method.” Physical Review Letters 128, no. 3 (January 19, 2022): 030501. https://doi.org/10.1103/PhysRevLett.128.030501.
-2. Noisy limit
-    * Gao, Xun, and Luming Duan. “Efficient Classical Simulation of Noisy Quantum Computation.” October 7, 2018. arXiv.1810.03176.
-    * Shao, Yuguo, Fuchuan Wei, Song Cheng, and Zhengwei Liu. “Simulating Quantum Mean Values in Noisy Variational Quantum Algorithms: A Polynomial-Scale Approach.” July 20, 2023. arXiv.2306.05804.
+There are special cases that quantum systems are efficiently simulatable by a classical computing device.
 """
 
-# ╔═╡ 84151b5b-cf9e-400a-8615-dd6faac87a4a
-LocalResource("images/noisy-complexity.png")
+# ╔═╡ b92db46b-3c34-44c6-92a5-1a1d3bed3a1f
+LocalResource("images/simulatable.png")
+
+# ╔═╡ 86fd00e8-289d-48ca-8904-980fc1e8dc18
+md"""
+
+### References
+1. Low entangled state
+    * [Markov, Igor L., and Yaoyun Shi. “Simulating Quantum Computation by Contracting Tensor Networks.” SIAM Journal on Computing 38, no. 3 (January 2008): 963–81.](https://doi.org/10.1137/050644756)
+    * [Kalachev, Gleb, Pavel Panteleev, and Man-Hong Yung. “Recursive Multi-Tensor Contraction for XEB Verification of Quantum Circuits,” 2021, 1–9.](https://arxiv.org/abs/2108.05665)
+2. Noisy limit
+    * [Gao, Xun, and Luming Duan. “Efficient Classical Simulation of Noisy Quantum Computation.” October 7, 2018. arXiv.1810.03176.](https://arxiv.org/abs/2003.13163)
+    * [Shao, Yuguo, Fuchuan Wei, Song Cheng, and Zhengwei Liu. “Simulating Quantum Mean Values in Noisy Variational Quantum Algorithms: A Polynomial-Scale Approach.” July 20, 2023. arXiv.2306.05804.](https://arxiv.org/abs/2306.05804)
+"""
 
 # ╔═╡ 3b0c380f-3885-4b81-bef1-636a51a8e760
 md"""# Tensor network backend
@@ -580,6 +682,13 @@ md"""Feng Pan et al.: "Nope! by contracting its tensor network representation on
 # ╔═╡ 522318f0-c11f-418f-a415-e0278cfc03b7
 LocalResource("images/bigbatch.png")
 
+# ╔═╡ 9e88ebf9-19fc-4212-b59d-3c063def8a01
+md"""
+### References
+* [Arute, Frank, Kunal Arya, Ryan Babbush, Dave Bacon, Joseph C. Bardin, Rami Barends, Rupak Biswas, et al. “Quantum Supremacy Using a Programmable Superconducting Processor.” Nature 574, no. 7779 (October 2019): 505–10.](https://doi.org/10.1038/s41586-019-1666-5)
+* [Pan, Feng, and Pan Zhang. “Simulation of Quantum Circuits Using the Big-Batch Tensor Network Method.” Physical Review Letters 128, no. 3 (January 19, 2022): 030501.](https://doi.org/10.1103/PhysRevLett.128.030501)
+"""
+
 # ╔═╡ 8e43d2e1-4970-4def-a4b3-9469cc4daff7
 md"""
 # YaoToEinsum
@@ -587,7 +696,6 @@ md"""
 A state of the art tensor network backend for Yao, which supports
 * Slicing (for reducing memory cost)
 * GPU simulation
-* Generic element type
 """
 
 # ╔═╡ 3cc6287d-d076-4308-8098-5478655bdc70
@@ -618,10 +726,12 @@ SUM:                            12            151             36            800
 
 # ╔═╡ cec44a64-16d8-47a3-8cca-822d4f3c20f3
 md"""
-* It is based on [OMEinsum](https://github.com/under-Peter/OMEinsum.jl) (Google Summer of Code, 2019)
-* OMEinsum is later extended with state of the art contraction order finding algorithms.
+* It is based on [OMEinsum](https://github.com/under-Peter/OMEinsum.jl) (Andreas Peter, Google Summer of Code, 2019)
+* `OMEinsum` is later extended with state of the art contraction order finding algorithms.
     - Recursive min-cut
     - Local search
+
+Please check Github repo [OMEinsumContractionOrders.jl](https://github.com/TensorBFS/OMEinsumContractionOrders.jl) for more information.
 
 ### References
 * Gray, Johnnie, and Stefanos Kourtis. “Hyper-Optimized Tensor Network Contraction.” ArXiv, 2020. https://doi.org/10.22331/q-2021-03-15-410.
@@ -639,166 +749,105 @@ md"Julia slack > yao-dev"
 # ╔═╡ 182b6520-d423-4aa5-8ef0-5e16f28960f6
 LocalResource("images/yaotoeinsum-question.png")
 
-# ╔═╡ 952b7b81-7d9a-450a-8973-d9111e90870d
+# ╔═╡ 2ddadb79-b52d-4ed8-b471-d6c8121ec798
 md"""
-# Bloqade
+```julia
+julia> @btimes get_your_question_anwsered(
+		"slack > yao_dev", 
+		"zulip > yao-dev", 
+		"discourse > quantum category"
+	)
+1 hour
+```
 """
 
 # ╔═╡ d1449d83-02ce-45d0-adfe-db86a5ece921
 md"""
-# Live coding:
+# Live coding
 
-Summarized in the file "clips/yao-v0.8.jl"
+Source code available in file: `clips/yaotoeinsum.jl`
 """
 
 # ╔═╡ e0a259f4-6d3d-45e6-890c-35115da50328
-livecoding("https://raw.githubusercontent.com/GiggleLiu/YaoTutorial/munich/clips/yao-v0.8.cast")
+livecoding("https://raw.githubusercontent.com/GiggleLiu/YaoTutorial/munich/clips/yaotoeinsum.cast")
+
+# ╔═╡ 6abb5d21-6e36-46a0-8448-3231a58b6694
+md"# Density matrix based simulation"
+
+# ╔═╡ f5aa8b74-3390-4c6d-ae02-b00a907f4c4a
+# create a reduced density matrix on subsystem (1, 2, 3)
+dm = density_matrix(ghz_state(5), 1:3)
+
+# ╔═╡ 7f0a9bc9-262e-4472-baf4-8a0fb832b6c3
+# the density matrix is represented as a matrix - computational very inefficient
+dm.state
+
+# ╔═╡ 3e7fcf94-7bdb-420b-88cf-560a18c0c393
+# the entanglement entropy
+von_neumann_entropy(dm)
+
+# ╔═╡ 0b45cd74-dd01-40ff-b4ad-97dc373780fb
+# apply a quantum gate X on the first qubit
+apply(dm, put(3, 1=>X))
+
+# ╔═╡ daa162ff-1781-4244-8139-990b2b910102
+# measure the density matrix
+measure(dm; nshots=5)
+
+# ╔═╡ 27c585cc-6105-48fd-9628-79b91bedc930
+measure(apply(dm, put(3, 1=>X)); nshots=5)
+
+# ╔═╡ 23df82ca-5b48-47a7-ab1a-b82c7ed47796
+# the expectation value of correlation Z₁Z₂
+expect(kron(3, 1=>Z, 2=>Z), dm)
+
+# ╔═╡ 58c9045b-737e-404e-8e53-9dc524f4c66a
+# noises can be defined as a quantum unitary channel
+dpolarizing = single_qubit_depolarizing_channel(0.1)
+
+# ╔═╡ c24d5c67-22bf-40fe-9736-2281a078b795
+let
+	dmk = dm
+	# repeatedly apply depolarizing channel on the first qubit
+	for i=1:100
+		dmk = apply(dmk, put(3, 1=>dpolarizing))
+	end
+	# the first qubit becomes completely random
+	measure(dmk; nshots=10)
+end
 
 # ╔═╡ b517c6b9-2897-418f-b056-a256acdeffe4
 md"""
-# Examples
+# More Examples
 For more examples, please check [QuAlgorithmZoo](https://github.com/QuantumBFS/QuAlgorithmZoo.jl).
 """
 
-# ╔═╡ 4f6b0937-46f2-49d7-884a-b4922fcc967e
-md"""
-# Construct a Hamiltonian
-"""
-
-# ╔═╡ b3ad824e-92f8-4921-9e05-0d9737137e24
-sx(i) = put(nbit, i=>X)
-
-# ╔═╡ a56869c2-76c1-4d9b-af01-5df46a08422c
-sy(i) = put(nbit, i=>Y)
-
-# ╔═╡ 9f902bd4-2264-4608-bb89-9893ca90566f
-sz(i) = put(nbit, i=>Z)
-
-# ╔═╡ 9c4fcb8e-d448-42b3-8f1c-9a088eb46029
-md"# Wave function ansatz"
-
-# ╔═╡ eff80f11-01d4-4ea2-9660-de7e662ef459
-dispatch!(dc, :random)
-
-# get wave function
-
-# ╔═╡ f4851ba6-e770-443a-b759-af5c50160608
-expect(hami, out)
-
-# ╔═╡ ad191b6f-8300-43e2-92f1-0259931d658c
-# The training
-
-# ╔═╡ 13e8a14e-955d-450b-9340-ae2600eac2c2
-# get the gradient
-∇out = copy(out) |> hami
-
-# ╔═╡ b2033952-3bfe-41c3-815d-2d1fbd437bfe
-backward!((copy(out), ∇out), dc)
-
-# ╔═╡ 77a520fa-0ced-45cb-aa3e-2cffe42ede55
-grad = gradient(dc)
-
-# gradient descent
-
-# ╔═╡ fefea162-942a-401b-994d-4eae89f9a631
-dispatch!(-, dc, grad*0.1);
-
-# ╔═╡ b7a39903-5dab-4cd8-9bc3-16832ad7ca7f
-expect(hami, zero_state(nbit) |> dc)
-
-# ╔═╡ 63a39252-5cb7-4e93-aeb1-c1e2799c99ee
-md"# Back propagation in QC"
-
-# ╔═╡ caa496b8-06c0-4268-98d3-780ee7b91f8e
-md"![image.png](images/wavebp.png)"
-
-# ╔═╡ 9052a48f-5610-4177-8aa4-8829796b86cd
-md"# differentiate over matrix representation"
-
-# ╔═╡ cfc950b1-d24a-461f-a139-90419e98c0db
-md"![image.png](images/zygote-yao.png)"
-
 # ╔═╡ 51f7b1f4-3260-4e71-b427-7e79fc64b057
 md"""
-# Future of Yao.jl
+# What is the next step?
 """
 
 # ╔═╡ ebe2e897-0197-4d91-a482-220d666294f7
 md"""
-1. Roger Luo and Chen Zhao will work on [YaoExpr.jl](https://github.com/QuantumBFS/YaoExpr.jl): quantum operator algebra
-2. I will focus more on tensor network based simulation.
+1. Roger Luo and Chen Zhao is working on [YaoExpr.jl](https://github.com/QuantumBFS/YaoExpr.jl): quantum operator algebra
+2. GiggleLiu will focus more on tensor network based simulation on density matrix.
 """
-
-# ╔═╡ 5857a52c-631b-4868-bd5f-2d0fc4c53cc2
-md"""
-# How to Learn Yao.jl
-### Read the documentation
-
-https://quantumbfs.github.io/Yao.jl/latest
-
-### 关注我的知乎专栏 “和Leo一起学量子编程”
-https://zhuanlan.zhihu.com/quantumcoding
-
-### Quantum Algorithm Zoo
-https://github.com/QuantumBFS/QuAlgorithmZoo.jl
-"""
-
-# ╔═╡ 82fed728-8b23-4fce-991b-8a427141b81b
-md"""
-# How to contribute to an open source project
-### File an issue
-* https://github.com/QuantumBFS/Yao.jl/issues/new
-
-### Give us pull requests
-* Documentation
-* Writing tests
-* ...
-"""
-
-# ╔═╡ 8e4ec513-88ff-42de-8edc-4de8320d5bce
-md"""
-## Section 3.1: QFT simulation on GPU
-# show to use GPU power
-"""
-
-# ╔═╡ 830938f9-d91e-4148-99ba-5230a09a7898
-creg = reg |> cu
-
-# ╔═╡ 7ff6d244-d902-47b0-be63-1d8ffa06b483
-creg |> subroutine(20, qft, (4,6,7))
-
-#+ 2
-#== Section 3.2: QFT simulation with Tensor Networks ==#
-
-# ╔═╡ 58a636fe-39c4-49aa-a0da-e2777aba489e
-dc = dc |> autodiff(:BP)
-
-# parameter management
-
-# ╔═╡ 7744f8de-2880-4e46-ac6c-42e98daa3e4c
-dc = random_diff_circuit(nbit)
-
-# tag differentiable nodes
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
-CuYao = "b48ca7a8-dd42-11e8-2b8e-1b7706800275"
 KrylovKit = "0b1a1467-8014-51b9-945f-bf0ae24f4b77"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
 SymEngine = "123dc426-2d89-5057-bbad-38513e3affd8"
 Yao = "5872b779-8223-5990-8dd0-5abbb0748c8c"
 YaoPlots = "32cfe2d9-419e-45f2-8191-2267705d8dbc"
-YaoToEinsum = "9b173c7b-dc24-4dc5-a0e1-adab2f7b6ba9"
 
 [compat]
-CuYao = "~0.3.8"
 KrylovKit = "~0.6.0"
 PlutoUI = "~0.7.52"
 SymEngine = "~0.10.0"
 Yao = "~0.8.10"
 YaoPlots = "~0.8.1"
-YaoToEinsum = "~0.2.0"
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000002
@@ -807,29 +856,13 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.10.0-beta3"
 manifest_format = "2.0"
-project_hash = "1dd90d9064a25f5015072934130d652b8aafab01"
-
-[[deps.AbstractFFTs]]
-deps = ["LinearAlgebra"]
-git-tree-sha1 = "d92ad398961a3ed262d8bf04a1a2b8340f915fef"
-uuid = "621f4979-c628-5d54-868e-fcf4e3e8185c"
-version = "1.5.0"
-weakdeps = ["ChainRulesCore", "Test"]
-
-    [deps.AbstractFFTs.extensions]
-    AbstractFFTsChainRulesCoreExt = "ChainRulesCore"
-    AbstractFFTsTestExt = "Test"
+project_hash = "b1b5daf77014b58fb8b586b8dbf7f9ec10690c2f"
 
 [[deps.AbstractPlutoDingetjes]]
 deps = ["Pkg"]
 git-tree-sha1 = "91bd53c39b9cbfb5ef4b015e8b582d344532bd0a"
 uuid = "6e696c72-6542-2067-7265-42206c756150"
 version = "1.2.0"
-
-[[deps.AbstractTrees]]
-git-tree-sha1 = "faa260e4cb5aba097a73fab382dd4b5819d8ec8c"
-uuid = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
-version = "0.4.4"
 
 [[deps.Adapt]]
 deps = ["LinearAlgebra", "Requires"]
@@ -870,31 +903,8 @@ version = "7.4.11"
 [[deps.Artifacts]]
 uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
 
-[[deps.Atomix]]
-deps = ["UnsafeAtomics"]
-git-tree-sha1 = "c06a868224ecba914baa6942988e2f2aade419be"
-uuid = "a9b6321e-bd34-4604-b9c9-b65b8de01458"
-version = "0.1.0"
-
-[[deps.BFloat16s]]
-deps = ["LinearAlgebra", "Printf", "Random", "Test"]
-git-tree-sha1 = "dbf84058d0a8cbbadee18d25cf606934b22d7c66"
-uuid = "ab4f0b2a-ad5b-11e8-123f-65d77653426b"
-version = "0.4.2"
-
 [[deps.Base64]]
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
-
-[[deps.BatchedRoutines]]
-deps = ["LinearAlgebra"]
-git-tree-sha1 = "441db9f0399bcfb4eeb8b891a6b03f7acc5dc731"
-uuid = "a9ab73d0-e05c-5df1-8fde-d6a4645b8d8e"
-version = "0.2.2"
-
-[[deps.BetterExp]]
-git-tree-sha1 = "dd3448f3d5b2664db7eceeec5f744535ce6e759b"
-uuid = "7cffe744-45fd-4178-b173-cf893948b8b7"
-version = "0.1.0"
 
 [[deps.BitBasis]]
 deps = ["LinearAlgebra", "StaticArrays"]
@@ -907,39 +917,6 @@ deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
 git-tree-sha1 = "19a35467a82e236ff51bc17a3a44b69ef35185a2"
 uuid = "6e34b625-4abd-537c-b88f-471c36dfa7a0"
 version = "1.0.8+0"
-
-[[deps.CEnum]]
-git-tree-sha1 = "eb4cb44a499229b3b8426dcfb5dd85333951ff90"
-uuid = "fa961155-64e5-5f13-b03f-caf6b980ea82"
-version = "0.4.2"
-
-[[deps.CUDA]]
-deps = ["AbstractFFTs", "Adapt", "BFloat16s", "CEnum", "CUDA_Driver_jll", "CUDA_Runtime_Discovery", "CUDA_Runtime_jll", "Crayons", "DataFrames", "ExprTools", "GPUArrays", "GPUCompiler", "KernelAbstractions", "LLVM", "LazyArtifacts", "Libdl", "LinearAlgebra", "Logging", "NVTX", "Preferences", "PrettyTables", "Printf", "Random", "Random123", "RandomNumbers", "Reexport", "Requires", "SparseArrays", "Statistics", "UnsafeAtomicsLLVM"]
-git-tree-sha1 = "f062a48c26ae027f70c44f48f244862aec47bf99"
-uuid = "052768ef-5323-5732-b1bb-66c8b64840ba"
-version = "5.0.0"
-weakdeps = ["SpecialFunctions"]
-
-    [deps.CUDA.extensions]
-    SpecialFunctionsExt = "SpecialFunctions"
-
-[[deps.CUDA_Driver_jll]]
-deps = ["Artifacts", "JLLWrappers", "LazyArtifacts", "Libdl", "Pkg"]
-git-tree-sha1 = "35a37bb72b35964f2895c12c687ae263b4ac170c"
-uuid = "4ee394cb-3365-5eb0-8335-949819d2adfc"
-version = "0.6.0+3"
-
-[[deps.CUDA_Runtime_Discovery]]
-deps = ["Libdl"]
-git-tree-sha1 = "bcc4a23cbbd99c8535a5318455dcf0f2546ec536"
-uuid = "1af6417a-86b4-443c-805f-a4643ffb695f"
-version = "0.2.2"
-
-[[deps.CUDA_Runtime_jll]]
-deps = ["Artifacts", "CUDA_Driver_jll", "JLLWrappers", "LazyArtifacts", "Libdl", "TOML"]
-git-tree-sha1 = "bfe5a693a11522d58392f742243f2b50dc27afd6"
-uuid = "76a88914-d11a-5bdc-97e0-2f5a05c973a2"
-version = "0.9.2+0"
 
 [[deps.CacheServers]]
 deps = ["Distributed", "Test"]
@@ -977,11 +954,6 @@ git-tree-sha1 = "fc08e5930ee9a4e03f84bfb5211cb54e7769758a"
 uuid = "5ae59095-9a9b-59fe-a467-6f913c188581"
 version = "0.12.10"
 
-[[deps.Combinatorics]]
-git-tree-sha1 = "08c8b6831dc00bfea825826be0bc8336fc369860"
-uuid = "861a8166-3701-5b0c-9a16-15d98fcdc6aa"
-version = "1.0.2"
-
 [[deps.Compat]]
 deps = ["UUIDs"]
 git-tree-sha1 = "8a62af3e248a8c4bad6b32cbbe663ae02275e32c"
@@ -997,38 +969,16 @@ deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
 version = "1.0.5+1"
 
-[[deps.Crayons]]
-git-tree-sha1 = "249fe38abf76d48563e2f4556bebd215aa317e15"
-uuid = "a8cc5b0e-0ffa-5ad4-8c14-923d3ee1735f"
-version = "4.1.1"
-
-[[deps.CuYao]]
-deps = ["CUDA", "LinearAlgebra", "Random", "Reexport", "TupleTools", "Yao"]
-git-tree-sha1 = "c452445d0bfc469ec4c6364611413ef662b0c91b"
-uuid = "b48ca7a8-dd42-11e8-2b8e-1b7706800275"
-version = "0.3.8"
-
 [[deps.DataAPI]]
 git-tree-sha1 = "8da84edb865b0b5b0100c0666a9bc9a0b71c553c"
 uuid = "9a962f9c-6df0-11e9-0e5d-c546b8b5ee8a"
 version = "1.15.0"
-
-[[deps.DataFrames]]
-deps = ["Compat", "DataAPI", "DataStructures", "Future", "InlineStrings", "InvertedIndices", "IteratorInterfaceExtensions", "LinearAlgebra", "Markdown", "Missings", "PooledArrays", "PrecompileTools", "PrettyTables", "Printf", "REPL", "Random", "Reexport", "SentinelArrays", "SortingAlgorithms", "Statistics", "TableTraits", "Tables", "Unicode"]
-git-tree-sha1 = "04c738083f29f86e62c8afc341f0967d8717bdb8"
-uuid = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
-version = "1.6.1"
 
 [[deps.DataStructures]]
 deps = ["Compat", "InteractiveUtils", "OrderedCollections"]
 git-tree-sha1 = "3dbd312d370723b6bb43ba9d02fc36abade4518d"
 uuid = "864edb3b-99cc-5e75-8d2d-829cb0a9cfe8"
 version = "0.18.15"
-
-[[deps.DataValueInterfaces]]
-git-tree-sha1 = "bfc1187b79289637fa0ef6d4436ebdfe6905cbd6"
-uuid = "e2d170a0-9d28-54be-80f0-106bbe20a464"
-version = "1.0.0"
 
 [[deps.Dates]]
 deps = ["Printf"]
@@ -1060,11 +1010,6 @@ deps = ["Adapt", "ArrayInterface", "GPUArraysCore", "GenericSchur", "LinearAlgeb
 git-tree-sha1 = "602e4585bcbd5a25bc06f514724593d13ff9e862"
 uuid = "d4d017d3-3776-5f7e-afef-a10c40355c18"
 version = "1.25.0"
-
-[[deps.ExprTools]]
-git-tree-sha1 = "27415f162e6028e81c72b82ef756bf321213b6ec"
-uuid = "e2ba6199-217a-4e67-a87a-7c52f15ade04"
-version = "0.1.10"
 
 [[deps.FFMPEG]]
 deps = ["FFMPEG_jll"]
@@ -1111,32 +1056,16 @@ git-tree-sha1 = "aa31987c2ba8704e23c6c8ba8a4f769d5d7e4f91"
 uuid = "559328eb-81f9-559d-9380-de523a88c83c"
 version = "1.0.10+0"
 
-[[deps.Future]]
-deps = ["Random"]
-uuid = "9fa8497b-333b-5362-9e8d-4d0656e87820"
-
 [[deps.GMP_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "781609d7-10c4-51f6-84f2-b8444358ff6d"
 version = "6.2.1+6"
-
-[[deps.GPUArrays]]
-deps = ["Adapt", "GPUArraysCore", "LLVM", "LinearAlgebra", "Printf", "Random", "Reexport", "Serialization", "Statistics"]
-git-tree-sha1 = "8ad8f375ae365aa1eb2f42e2565a40b55a4b69a8"
-uuid = "0c68f7d7-f131-5f86-a1c3-88cf8149b2d7"
-version = "9.0.0"
 
 [[deps.GPUArraysCore]]
 deps = ["Adapt"]
 git-tree-sha1 = "2d6ca471a6c7b536127afccfa7564b5b39227fe0"
 uuid = "46192b85-c4d5-4398-a991-12ede77f4527"
 version = "0.1.5"
-
-[[deps.GPUCompiler]]
-deps = ["ExprTools", "InteractiveUtils", "LLVM", "Libdl", "Logging", "Scratch", "TimerOutputs", "UUIDs"]
-git-tree-sha1 = "5e4487558477f191c043166f8301dd0b4be4e2b2"
-uuid = "61eb1bfa-7361-4325-ad38-22787b887f55"
-version = "0.24.5"
 
 [[deps.GenericSchur]]
 deps = ["LinearAlgebra", "Printf"]
@@ -1192,30 +1121,14 @@ git-tree-sha1 = "d75853a0bdbfb1ac815478bacd89cd27b550ace6"
 uuid = "b5f81e59-6552-4d32-b1f0-c071b021bf89"
 version = "0.2.3"
 
-[[deps.InlineStrings]]
-deps = ["Parsers"]
-git-tree-sha1 = "9cc2baf75c6d09f9da536ddf58eb2f29dedaf461"
-uuid = "842dd82b-1e85-43dc-bf29-5d0ee9dffc48"
-version = "1.4.0"
-
 [[deps.InteractiveUtils]]
 deps = ["Markdown"]
 uuid = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
-
-[[deps.InvertedIndices]]
-git-tree-sha1 = "0dc7b50b8d436461be01300fd8cd45aa0274b038"
-uuid = "41ab1584-1d38-5bbf-9106-f11c6c58b48f"
-version = "1.3.0"
 
 [[deps.IrrationalConstants]]
 git-tree-sha1 = "630b497eafcc20001bba38a4651b327dcfc491d2"
 uuid = "92d709cd-6900-40b7-9082-c6be49f344b6"
 version = "0.2.2"
-
-[[deps.IteratorInterfaceExtensions]]
-git-tree-sha1 = "a3f24677c21f5bbe9d2a714f95dcd58337fb2856"
-uuid = "82899510-4779-5014-852e-03e436cf321d"
-version = "1.0.0"
 
 [[deps.JLLWrappers]]
 deps = ["Artifacts", "Preferences"]
@@ -1235,29 +1148,11 @@ git-tree-sha1 = "6f2675ef130a300a112286de91973805fcc5ffbc"
 uuid = "aacddb02-875f-59d6-b918-886e6ef4fbf8"
 version = "2.1.91+0"
 
-[[deps.JuliaNVTXCallbacks_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "af433a10f3942e882d3c671aacb203e006a5808f"
-uuid = "9c1d0b0a-7046-5b2e-a33f-ea22f176ac7e"
-version = "0.2.1+0"
-
 [[deps.Juno]]
 deps = ["Base64", "Logging", "Media", "Profile"]
 git-tree-sha1 = "07cb43290a840908a771552911a6274bc6c072c7"
 uuid = "e5e0dc1b-0480-54bc-9374-aad01c23163d"
 version = "0.8.4"
-
-[[deps.KernelAbstractions]]
-deps = ["Adapt", "Atomix", "InteractiveUtils", "LinearAlgebra", "MacroTools", "PrecompileTools", "Requires", "SparseArrays", "StaticArrays", "UUIDs", "UnsafeAtomics", "UnsafeAtomicsLLVM"]
-git-tree-sha1 = "4c5875e4c228247e1c2b087669846941fb6e0118"
-uuid = "63c18a36-062a-441e-b654-da1e3ab1ce7c"
-version = "0.9.8"
-
-    [deps.KernelAbstractions.extensions]
-    EnzymeExt = "EnzymeCore"
-
-    [deps.KernelAbstractions.weakdeps]
-    EnzymeCore = "f151be2c-9106-41f4-ab19-57ee4f262869"
 
 [[deps.KrylovKit]]
 deps = ["ChainRulesCore", "GPUArraysCore", "LinearAlgebra", "Printf"]
@@ -1277,18 +1172,6 @@ git-tree-sha1 = "bf36f528eec6634efc60d7ec062008f171071434"
 uuid = "88015f11-f218-50d7-93a8-a6af411a945d"
 version = "3.0.0+1"
 
-[[deps.LLVM]]
-deps = ["CEnum", "LLVMExtra_jll", "Libdl", "Printf", "Unicode"]
-git-tree-sha1 = "4ea2928a96acfcf8589e6cd1429eff2a3a82c366"
-uuid = "929cbde3-209d-540e-8aea-75f648917ca0"
-version = "6.3.0"
-
-[[deps.LLVMExtra_jll]]
-deps = ["Artifacts", "JLLWrappers", "LazyArtifacts", "Libdl", "TOML"]
-git-tree-sha1 = "e7c01b69bcbcb93fd4cbc3d0fea7d229541e18d2"
-uuid = "dad2f222-ce93-54a1-a47d-0025e8a3acab"
-version = "0.0.26+0"
-
 [[deps.LLVMOpenMP_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
 git-tree-sha1 = "f689897ccbe049adb19a065c495e75f372ecd42b"
@@ -1305,10 +1188,6 @@ version = "2.10.1+0"
 git-tree-sha1 = "f2355693d6778a178ade15952b7ac47a4ff97996"
 uuid = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
 version = "1.3.0"
-
-[[deps.LazyArtifacts]]
-deps = ["Artifacts", "Pkg"]
-uuid = "4af54fe1-eca0-43a8-85a7-787d91b784e3"
 
 [[deps.LegibleLambdas]]
 deps = ["MacroTools"]
@@ -1481,18 +1360,6 @@ uuid = "a63ad114-7e13-5084-954f-fe012c677804"
 uuid = "14a3606d-f60d-562e-9121-12d972cd8159"
 version = "2023.1.10"
 
-[[deps.NVTX]]
-deps = ["Colors", "JuliaNVTXCallbacks_jll", "Libdl", "NVTX_jll"]
-git-tree-sha1 = "8bc9ce4233be3c63f8dcd78ccaf1b63a9c0baa34"
-uuid = "5da4648a-3479-48b8-97b9-01cb529c0a1f"
-version = "0.3.3"
-
-[[deps.NVTX_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "ce3269ed42816bf18d500c9f63418d4b0d9f5a3b"
-uuid = "e98f9f5b-d649-5603-91fd-7774390e6439"
-version = "3.1.0+2"
-
 [[deps.NaNMath]]
 deps = ["OpenLibm_jll"]
 git-tree-sha1 = "0877504529a3e5c3343c6f8b4c0381e57e4387e4"
@@ -1502,28 +1369,6 @@ version = "1.0.2"
 [[deps.NetworkOptions]]
 uuid = "ca575930-c2e3-43a9-ace4-1e988b2c1908"
 version = "1.2.0"
-
-[[deps.OMEinsum]]
-deps = ["AbstractTrees", "BatchedRoutines", "ChainRulesCore", "Combinatorics", "LinearAlgebra", "MacroTools", "OMEinsumContractionOrders", "Test", "TupleTools"]
-git-tree-sha1 = "998d9e06130af24afef1ab3c2103fe2d0e6a357d"
-uuid = "ebe7aa44-baf0-506c-a96f-8464559b3922"
-version = "0.7.5"
-weakdeps = ["CUDA"]
-
-    [deps.OMEinsum.extensions]
-    CUDAExt = "CUDA"
-
-[[deps.OMEinsumContractionOrders]]
-deps = ["AbstractTrees", "BetterExp", "JSON", "SparseArrays", "Suppressor"]
-git-tree-sha1 = "b0cba9f4a6f021a63b066f0bb29a6fd63c93be44"
-uuid = "6f22d1fd-8eed-4bb7-9776-e7d684900715"
-version = "0.8.3"
-
-    [deps.OMEinsumContractionOrders.extensions]
-    KaHyParExt = ["KaHyPar"]
-
-    [deps.OMEinsumContractionOrders.weakdeps]
-    KaHyPar = "2a6221f6-aa48-11e9-3542-2d9e0ef01880"
 
 [[deps.Ogg_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1598,12 +1443,6 @@ git-tree-sha1 = "e47cd150dbe0443c3a3651bc5b9cbd5576ab75b7"
 uuid = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
 version = "0.7.52"
 
-[[deps.PooledArrays]]
-deps = ["DataAPI", "Future"]
-git-tree-sha1 = "36d8b4b899628fb92c2749eb488d884a926614d3"
-uuid = "2dfb63ee-cc39-5dd5-95bd-886bf059d720"
-version = "1.4.3"
-
 [[deps.PrecompileTools]]
 deps = ["Preferences"]
 git-tree-sha1 = "03b4c25b43cb84cee5c90aa9b5ea0a78fd848d2f"
@@ -1615,12 +1454,6 @@ deps = ["TOML"]
 git-tree-sha1 = "00805cd429dcb4870060ff49ef443486c262e38e"
 uuid = "21216c6a-2e73-6563-6e65-726566657250"
 version = "1.4.1"
-
-[[deps.PrettyTables]]
-deps = ["Crayons", "LaTeXStrings", "Markdown", "Printf", "Reexport", "StringManipulation", "Tables"]
-git-tree-sha1 = "ee094908d720185ddbdc58dbe0c1cbe35453ec7a"
-uuid = "08abe8d2-0d0c-5749-adfa-8a2ac140af0d"
-version = "2.2.7"
 
 [[deps.Printf]]
 deps = ["Unicode"]
@@ -1637,18 +1470,6 @@ uuid = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
 [[deps.Random]]
 deps = ["SHA"]
 uuid = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
-
-[[deps.Random123]]
-deps = ["Random", "RandomNumbers"]
-git-tree-sha1 = "552f30e847641591ba3f39fd1bed559b9deb0ef3"
-uuid = "74087812-796a-5b5d-8853-05524746bad3"
-version = "1.6.1"
-
-[[deps.RandomNumbers]]
-deps = ["Random", "Requires"]
-git-tree-sha1 = "043da614cc7e95c703498a491e2c21f58a2b8111"
-uuid = "e6cf234a-135c-5ec9-84dd-332b85af5143"
-version = "1.5.3"
 
 [[deps.RecipesBase]]
 deps = ["PrecompileTools"]
@@ -1676,18 +1497,6 @@ version = "1.0.0"
 [[deps.SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
 version = "0.7.0"
-
-[[deps.Scratch]]
-deps = ["Dates"]
-git-tree-sha1 = "30449ee12237627992a99d5e30ae63e4d78cd24a"
-uuid = "6c6a2e73-6563-6170-7368-637461726353"
-version = "1.2.0"
-
-[[deps.SentinelArrays]]
-deps = ["Dates", "Random"]
-git-tree-sha1 = "04bdff0b09c65ff3e06a05e3eb7b120223da3d39"
-uuid = "91c51154-3ec4-41a3-a24f-3f23e20d615c"
-version = "1.4.0"
 
 [[deps.Serialization]]
 uuid = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
@@ -1748,12 +1557,6 @@ git-tree-sha1 = "1d77abd07f617c4868c33d4f5b9e1dbb2643c9cf"
 uuid = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 version = "0.34.2"
 
-[[deps.StringManipulation]]
-deps = ["PrecompileTools"]
-git-tree-sha1 = "a04cabe79c5f01f4d723cc6704070ada0b9d46d5"
-uuid = "892a3eda-7b42-436c-8928-eab12a02cf0e"
-version = "0.3.4"
-
 [[deps.SuiteSparse]]
 deps = ["Libdl", "LinearAlgebra", "Serialization", "SparseArrays"]
 uuid = "4607b0f0-06f3-5cda-b6b1-a6196a1729e9"
@@ -1762,12 +1565,6 @@ uuid = "4607b0f0-06f3-5cda-b6b1-a6196a1729e9"
 deps = ["Artifacts", "Libdl", "Pkg", "libblastrampoline_jll"]
 uuid = "bea87d4a-7f5b-5778-9afe-8cc45184846c"
 version = "7.2.0+1"
-
-[[deps.Suppressor]]
-deps = ["Logging"]
-git-tree-sha1 = "6cd9e4a207964c07bf6395beff7a1e8f21d0f3b2"
-uuid = "fd094767-a336-5f1f-9728-57cf17d0bbfb"
-version = "0.2.6"
 
 [[deps.SymEngine]]
 deps = ["Compat", "Libdl", "LinearAlgebra", "RecipesBase", "Serialization", "SpecialFunctions", "SymEngine_jll"]
@@ -1786,18 +1583,6 @@ deps = ["Dates"]
 uuid = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
 version = "1.0.3"
 
-[[deps.TableTraits]]
-deps = ["IteratorInterfaceExtensions"]
-git-tree-sha1 = "c06b2f539df1c6efa794486abfb6ed2022561a39"
-uuid = "3783bdb8-4a98-5b6b-af9a-565f29a5fe9c"
-version = "1.0.1"
-
-[[deps.Tables]]
-deps = ["DataAPI", "DataValueInterfaces", "IteratorInterfaceExtensions", "LinearAlgebra", "OrderedCollections", "TableTraits"]
-git-tree-sha1 = "a1f34829d5ac0ef499f6d84428bd6b4c71f02ead"
-uuid = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
-version = "1.11.0"
-
 [[deps.Tar]]
 deps = ["ArgTools", "SHA"]
 uuid = "a4e569a6-e804-4fa4-b0f3-eef7a1d5b13e"
@@ -1806,12 +1591,6 @@ version = "1.10.0"
 [[deps.Test]]
 deps = ["InteractiveUtils", "Logging", "Random", "Serialization"]
 uuid = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-
-[[deps.TimerOutputs]]
-deps = ["ExprTools", "Printf"]
-git-tree-sha1 = "f548a9e9c490030e545f72074a41edfd0e5bcdd7"
-uuid = "a759f4b9-e2f1-59dc-863e-4aeb61b1ea8f"
-version = "0.5.23"
 
 [[deps.Tricks]]
 git-tree-sha1 = "aadb748be58b492045b4f56166b5188aa63ce549"
@@ -1834,17 +1613,6 @@ uuid = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
 
 [[deps.Unicode]]
 uuid = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
-
-[[deps.UnsafeAtomics]]
-git-tree-sha1 = "6331ac3440856ea1988316b46045303bef658278"
-uuid = "013be700-e6cd-48c3-b4a1-df204f14c38f"
-version = "0.2.1"
-
-[[deps.UnsafeAtomicsLLVM]]
-deps = ["LLVM", "UnsafeAtomics"]
-git-tree-sha1 = "323e3d0acf5e78a56dfae7bd8928c989b4f3083e"
-uuid = "d80eeb9a-aca5-4d75-85e5-170c8b632249"
-version = "0.1.3"
 
 [[deps.XML2_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Libiconv_jll", "Zlib_jll"]
@@ -1941,12 +1709,6 @@ git-tree-sha1 = "5f4e557b3bac0f8433013ab543fe1251a83c12c9"
 uuid = "3b27209a-d3d6-11e9-3c0f-41eb92b2cb9d"
 version = "0.6.6"
 
-[[deps.YaoToEinsum]]
-deps = ["LinearAlgebra", "OMEinsum", "Yao"]
-git-tree-sha1 = "a4cb642411b1dd1e57d0f7a455ee7bc51316afe6"
-uuid = "9b173c7b-dc24-4dc5-a0e1-adab2f7b6ba9"
-version = "0.2.0"
-
 [[deps.Zlib_jll]]
 deps = ["Libdl"]
 uuid = "83775a58-1f1d-513f-b197-d71354ab007a"
@@ -2031,17 +1793,20 @@ version = "3.5.0+0"
 # ╟─60bbb6a6-7f67-4755-93c2-9c82f4368e9c
 # ╟─8850540a-3ace-4d6e-817c-dbfc3e55f4dd
 # ╟─ed769b45-1712-4309-8ddd-120b31ca3568
-# ╟─d935b67a-2e77-4837-9cef-175dcd84040f
-# ╟─415a253a-a976-4d66-800b-98c1ca3e860e
 # ╟─9c651a0f-be52-46c4-803b-756d7d00a406
 # ╟─fdfb1ca6-e830-4c5c-8672-b42d0cb91a87
 # ╟─cc312d0b-a5f6-4fa7-ae06-50c43a05b157
+# ╟─d935b67a-2e77-4837-9cef-175dcd84040f
+# ╟─415a253a-a976-4d66-800b-98c1ca3e860e
+# ╟─a12aa313-f051-4f83-ac89-e3ab5685c5c8
 # ╟─9935877e-3cb0-46d8-a6bd-baa8efcaa5b7
+# ╟─61c3c643-dae3-4563-a85d-9daf07ff6060
 # ╟─a01484e7-0710-4de1-aa81-92e083884902
+# ╟─8da7a6c0-087c-4815-8011-4ef96ba971e1
 # ╟─e2d493c4-0060-46f3-a689-613058f6e293
 # ╟─2a6695b0-8e17-45f2-8656-7046dacaa349
 # ╟─c46a0e9c-729d-4a8a-b70c-78b53fbab597
-# ╟─8da7a6c0-087c-4815-8011-4ef96ba971e1
+# ╟─f7d01385-f32a-4fcd-bbea-7789674106a7
 # ╟─4457c6b8-a8e9-4853-a07a-1829d95be92e
 # ╟─5642d4d4-767e-4395-a01e-79487fb39fc5
 # ╟─a61a214c-0a43-4a15-a5c8-72716fbf3111
@@ -2049,40 +1814,55 @@ version = "3.5.0+0"
 # ╟─283ea80f-c749-4e59-a4f1-e73cfa32ad0d
 # ╟─b8cd9d6f-934f-4053-9d32-2535ce9d9f2c
 # ╟─b2b16731-9410-4be1-ae6e-6467547c3e81
+# ╟─e5312611-6c4c-4f51-aea0-9eb61cbb217a
 # ╟─ef06e741-fe88-42b5-9063-1306b00f3915
+# ╟─8b1915e3-63f8-461e-bdb1-4c257aa4d438
 # ╟─a5eeccdc-73cc-4e99-884b-a04e827cc4bf
 # ╠═78811601-76bf-44df-8a5f-8c9d1f3a87f2
 # ╟─6281b968-b4bb-4ec7-8cd6-da3e788c2287
 # ╠═b7d014b8-2c13-4ab0-8477-4d3284bc8f2d
-# ╠═f62a34f1-fdcc-4163-865c-0d0b6c0d091b
 # ╠═ad652d3e-a53e-4076-a1b0-e7ca7bd0d270
 # ╠═006f14ea-f730-4211-844d-8a37e460fa6b
 # ╠═d77242c6-d693-4d01-b04b-f8945b6b8125
 # ╠═f0c3aba2-7b8f-4f55-8fe0-6f6b664e73d3
+# ╠═2668cdd7-c83a-444e-9582-3d25fbdecd67
 # ╠═d04826f5-e9a2-49cd-9f07-9d0cd4029fdb
 # ╠═9112230a-32bc-47b7-a23e-cd4a77bd764d
 # ╟─0e93dd67-8831-4cf0-9802-835e7b30e2f5
 # ╟─295c6f45-0d97-42bc-b677-96ecbd124f37
 # ╠═4fd3761c-16fc-4833-97d4-6ef07c54a0bc
+# ╠═f26cc2ed-cb29-43d9-a216-2ea3da27516f
 # ╠═869332bd-b70e-4812-83b4-6f3bc8b1d458
 # ╠═b8924ea4-32e4-4d3a-9370-33987b8aefec
 # ╠═aa0cc0fe-fb25-4e6b-82b4-0bd70d41c36d
+# ╠═b8b7eed2-430c-401c-a026-cb6f44d2d4f6
+# ╠═3d79dc1c-082a-43fc-8037-d988eb3a81a6
 # ╠═935c518b-7a7f-485c-b37b-cb165e6ee77b
 # ╠═ff79a542-7a68-4d74-bf10-664b7e6fe7ba
 # ╠═b7c14cba-31f0-4fad-9f43-f61a1028b294
+# ╠═870bd2cd-2cf8-475d-b1d9-ce6113af5efb
 # ╠═4b9997ce-b45d-40ca-934e-ef72acea4e7d
+# ╠═abfb7c6a-ac95-4a84-8dcd-c5a58af21c7e
 # ╠═421f365a-599b-4b84-874f-4e9298721720
 # ╠═9c84936d-d678-4077-9423-dbb42629d6e2
+# ╠═6ee0a7d3-0453-4426-a58e-ad27ba56e7f9
 # ╠═6deb86e7-07de-4c2b-9ab8-8005e57582b6
+# ╠═2c4c0aac-8919-41c6-bb8f-b7bea5d2f759
 # ╠═4768ac25-62ed-42ae-a0c6-c039dabdbdae
 # ╟─96192c95-da9a-42ad-8acb-d93e1f348a34
 # ╠═abe87acc-29fb-4b64-9adb-d7a9b59b1ded
+# ╠═2b6622a7-f37b-4c66-b73d-3309570252e2
 # ╠═2a7a0629-678c-43d7-9f84-f82e2207c192
+# ╠═9451d2e5-e592-4ccd-b081-554d29891488
 # ╠═cacfd179-1c09-4048-bf55-d95ac30a20b8
 # ╠═676c9ed7-1c42-42d9-84a5-9d07f7c50f3c
+# ╠═4171ac27-2d56-4699-b816-300a56da94ec
 # ╠═3cfa909e-935c-4f41-9b32-fe86aef0026e
+# ╠═d1f688c1-5b01-4823-95ab-e405b826b9fc
 # ╠═ef656866-203e-4963-b575-b5de53aaac1a
+# ╠═b2b7db90-1d65-46f9-a171-8d7b3b48a97f
 # ╠═4dfc08fd-8a10-4d25-a273-a5c0e72df78e
+# ╠═f3bf77bc-2783-4ec4-b2ec-9fc07c73bdbb
 # ╠═337786c2-5d28-4c3c-976b-1b3bc21f32e5
 # ╠═7f7fc02f-8746-4313-8aa2-b1d9ed1b1dfa
 # ╠═007e9da9-8810-4731-b4e4-01c91f423089
@@ -2090,56 +1870,53 @@ version = "3.5.0+0"
 # ╠═399e2661-0b84-445a-97fc-da16884ac3ae
 # ╟─f2a372f1-06f7-46ff-a07d-9ed11fcd7a72
 # ╠═9486139b-3587-41ab-a917-5c82bd39b1c7
+# ╠═04b50a5b-8e57-461b-9bad-103ef3ed645a
 # ╠═a8d42876-4a32-4eb7-9dd1-eb93d1033be2
 # ╠═bebc0c44-e3d5-4c36-8ed8-f132e14ab8b3
+# ╠═779d209e-cdb0-4e35-adf7-e59c27bebf52
 # ╠═342467fb-9fc5-4f8c-bc1f-6c816848b56f
 # ╠═aa4370c0-f83c-469b-b1c8-beb88c56f815
+# ╠═59eb71ea-023f-4ef9-81e2-f01839d60669
 # ╠═0087779d-8f26-49ac-81df-bb6915249d9a
 # ╠═b332c418-7a90-47ab-a956-690a559a6d6d
 # ╠═9306c669-e6eb-4279-88c3-c76ed0318a85
 # ╠═308ca39c-1b2c-4528-8565-636d6b633a1f
 # ╠═91ca1d78-e273-47f2-8032-88dc2c7d8fff
+# ╠═e7f73769-823c-4dce-af96-f5440de2667a
 # ╠═77dbc06a-7a1c-4de7-9f37-cee57863c7c3
 # ╠═4bbf23e3-8a61-482f-853d-7fb98b8e28f5
 # ╠═58f0c73d-bb7f-4ea3-8ec4-24413698903e
 # ╠═5ae36501-c44f-4e37-9aa2-5a844e1d78e2
-# ╠═bacf498b-c391-46ce-9876-0a8fdf878d99
 # ╠═87e285b0-6029-4def-b47f-63472c493aa8
 # ╠═321f7104-eb8d-4682-bb8b-72ba19331c5b
 # ╠═b7be78f7-9a40-4362-8255-4c963622fa97
 # ╠═c49a3d96-ed54-40fa-8be2-c38bced18636
-# ╠═e4c88a2e-ac5e-4c0c-b894-47c629289e9a
-# ╠═371fc7e0-d66c-497b-92f4-213e846c9645
-# ╠═2d012753-231b-47e9-91e9-33a55c2de314
-# ╠═ee464349-8263-4688-8aa3-6d184f5b076c
-# ╠═3d2427af-f203-4818-9656-6d59def5baba
 # ╟─b7883e83-536b-4641-817f-3a0f643b4393
 # ╠═9a8a739e-6e5b-4fe0-b363-c56396de9914
 # ╠═c1b1bf1d-961d-455f-89bf-461d2658731a
 # ╠═8e1e6ba1-9b54-4bb7-89ab-7e8d2c4c87d6
 # ╠═46aa38fa-47ab-4c44-8bcb-655bd5ca70a6
 # ╠═92e266c9-0bdd-4fae-b3ca-291ba13d70c4
-# ╠═66e7b8b4-e090-416c-a066-729a6b461b36
-# ╠═72ed3e7c-8f59-4267-90d7-17329e9865f5
-# ╠═53091912-f495-4529-a4fa-e88dbb2769ab
-# ╠═3df4f2c8-a5a5-4b8c-901a-d054168b1af3
-# ╠═e30bb8bc-28b1-46a6-9d8b-056b226b0450
-# ╠═1f062228-6ce3-4204-8d00-c30b1edb722d
 # ╠═16b8b24a-aa45-482a-9e99-403d9acf3895
-# ╠═dea1a4cc-22c4-4d50-b6dd-7531df5fc5b6
+# ╠═18939877-3e04-4d54-bcf4-cadaa0f58e4b
+# ╠═4126923d-8041-4473-a7b1-179e7c09c1f1
+# ╠═49dc13a7-e9ac-481f-8b87-2873f7f102c3
 # ╠═1abc7199-423b-46d0-8610-87bbbe5b36ab
+# ╠═b7b8219d-bf14-4508-b508-ed0b24ec5183
 # ╟─4697607a-5d39-4548-b5aa-ad9e2427aa02
 # ╟─28e047c7-4dba-4daf-ab0e-10c103bb6b54
 # ╟─8a8b9b55-84a8-482c-a519-20a0be664275
 # ╟─f4e496bc-4f34-4b28-bbfc-0f4709129b0e
+# ╟─6237ef80-8efb-4df0-95c4-22197b85f248
+# ╟─b92db46b-3c34-44c6-92a5-1a1d3bed3a1f
 # ╟─86fd00e8-289d-48ca-8904-980fc1e8dc18
-# ╟─84151b5b-cf9e-400a-8615-dd6faac87a4a
 # ╟─3b0c380f-3885-4b81-bef1-636a51a8e760
 # ╟─fdb5f044-9ef5-4cf6-8828-59a8520023ad
 # ╟─cd67362c-0c60-4ed4-a165-8fca5d74f5ca
 # ╟─03a96fbf-439c-477e-8514-573ce2e6db1c
 # ╟─452bcc28-909e-4bbd-8dd0-3616632d52b4
 # ╟─522318f0-c11f-418f-a415-e0278cfc03b7
+# ╟─9e88ebf9-19fc-4212-b59d-3c063def8a01
 # ╟─8e43d2e1-4970-4def-a4b3-9469cc4daff7
 # ╟─3cc6287d-d076-4308-8098-5478655bdc70
 # ╟─a579eb2d-135a-448e-b769-6a68f137a004
@@ -2147,36 +1924,21 @@ version = "3.5.0+0"
 # ╟─a8c12dbf-2a53-4fa9-bd1d-7b11cf398a0a
 # ╟─bf7643c4-bae0-4d77-9903-29943f2efe5a
 # ╟─182b6520-d423-4aa5-8ef0-5e16f28960f6
-# ╠═952b7b81-7d9a-450a-8973-d9111e90870d
+# ╟─2ddadb79-b52d-4ed8-b471-d6c8121ec798
 # ╟─d1449d83-02ce-45d0-adfe-db86a5ece921
-# ╠═e0a259f4-6d3d-45e6-890c-35115da50328
+# ╟─e0a259f4-6d3d-45e6-890c-35115da50328
+# ╟─6abb5d21-6e36-46a0-8448-3231a58b6694
+# ╠═f5aa8b74-3390-4c6d-ae02-b00a907f4c4a
+# ╠═7f0a9bc9-262e-4472-baf4-8a0fb832b6c3
+# ╠═3e7fcf94-7bdb-420b-88cf-560a18c0c393
+# ╠═0b45cd74-dd01-40ff-b4ad-97dc373780fb
+# ╠═daa162ff-1781-4244-8139-990b2b910102
+# ╠═27c585cc-6105-48fd-9628-79b91bedc930
+# ╠═23df82ca-5b48-47a7-ab1a-b82c7ed47796
+# ╠═58c9045b-737e-404e-8e53-9dc524f4c66a
+# ╠═c24d5c67-22bf-40fe-9736-2281a078b795
 # ╟─b517c6b9-2897-418f-b056-a256acdeffe4
-# ╟─4f6b0937-46f2-49d7-884a-b4922fcc967e
-# ╠═b3ad824e-92f8-4921-9e05-0d9737137e24
-# ╠═a56869c2-76c1-4d9b-af01-5df46a08422c
-# ╠═9f902bd4-2264-4608-bb89-9893ca90566f
-# ╠═9c4fcb8e-d448-42b3-8f1c-9a088eb46029
-# ╠═7744f8de-2880-4e46-ac6c-42e98daa3e4c
-# ╠═58a636fe-39c4-49aa-a0da-e2777aba489e
-# ╠═eff80f11-01d4-4ea2-9660-de7e662ef459
-# ╠═f4851ba6-e770-443a-b759-af5c50160608
-# ╠═ad191b6f-8300-43e2-92f1-0259931d658c
-# ╠═13e8a14e-955d-450b-9340-ae2600eac2c2
-# ╠═b2033952-3bfe-41c3-815d-2d1fbd437bfe
-# ╠═77a520fa-0ced-45cb-aa3e-2cffe42ede55
-# ╠═fefea162-942a-401b-994d-4eae89f9a631
-# ╠═b7a39903-5dab-4cd8-9bc3-16832ad7ca7f
-# ╠═63a39252-5cb7-4e93-aeb1-c1e2799c99ee
-# ╠═caa496b8-06c0-4268-98d3-780ee7b91f8e
-# ╠═9052a48f-5610-4177-8aa4-8829796b86cd
-# ╠═cfc950b1-d24a-461f-a139-90419e98c0db
 # ╟─51f7b1f4-3260-4e71-b427-7e79fc64b057
 # ╟─ebe2e897-0197-4d91-a482-220d666294f7
-# ╠═5857a52c-631b-4868-bd5f-2d0fc4c53cc2
-# ╠═82fed728-8b23-4fce-991b-8a427141b81b
-# ╠═eb164249-b1a4-4b08-b4bb-b27ccdb9ff6b
-# ╠═8e4ec513-88ff-42de-8edc-4de8320d5bce
-# ╠═830938f9-d91e-4148-99ba-5230a09a7898
-# ╠═7ff6d244-d902-47b0-be63-1d8ffa06b483
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002

@@ -10,7 +10,7 @@ tensornetwork = YaoToEinsum.yao2einsum(qft;
     initial_state=Dict([i=>0 for i in 1:nqubits]),
     final_state=Dict([i=>0 for i in 1:nqubits])
     )
-    
+
 # using the slicing technique to reduce space complexity
 tensornetwork = YaoToEinsum.yao2einsum(qft;
     initial_state=Dict([i=>0 for i in 1:nqubits]),
