@@ -2,7 +2,7 @@
 
 julia_version = "1.10.0-beta3"
 manifest_format = "2.0"
-project_hash = "82ff308823ac6635c7fde53a0960b82c918a1ac5"
+project_hash = "49d740565cd84e77abd1fb12a3c71ddb7dbbbf04"
 
 [[deps.AbstractFFTs]]
 deps = ["LinearAlgebra"]
@@ -60,7 +60,7 @@ version = "7.4.11"
 uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
 
 [[deps.AsciinemaGenerator]]
-deps = ["InteractiveUtils", "REPL"]
+deps = ["InteractiveUtils", "JuliaSyntax", "REPL"]
 path = "/home/leo/.julia/dev/AsciinemaGenerator"
 uuid = "126a0909-f052-481b-a318-ea548fff52bb"
 version = "0.1.0"
@@ -321,6 +321,11 @@ deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
 git-tree-sha1 = "af433a10f3942e882d3c671aacb203e006a5808f"
 uuid = "9c1d0b0a-7046-5b2e-a33f-ea22f176ac7e"
 version = "0.2.1+0"
+
+[[deps.JuliaSyntax]]
+git-tree-sha1 = "d080fa670adde72509d03d91bf6ce6da2addb4be"
+uuid = "70703baa-626e-46a2-a12c-08ffd08c73b4"
+version = "0.4.6"
 
 [[deps.KernelAbstractions]]
 deps = ["Adapt", "Atomix", "InteractiveUtils", "LinearAlgebra", "MacroTools", "PrecompileTools", "Requires", "SparseArrays", "StaticArrays", "UUIDs", "UnsafeAtomics", "UnsafeAtomicsLLVM"]
@@ -796,9 +801,9 @@ version = "0.6.6"
 
 [[deps.YaoToEinsum]]
 deps = ["LinearAlgebra", "OMEinsum", "Yao"]
-git-tree-sha1 = "5b09040f9889e2c8b708b934803a32dd0c632c34"
+git-tree-sha1 = "a4cb642411b1dd1e57d0f7a455ee7bc51316afe6"
 uuid = "9b173c7b-dc24-4dc5-a0e1-adab2f7b6ba9"
-version = "0.1.5"
+version = "0.2.0"
 
 [[deps.Zlib_jll]]
 deps = ["Libdl"]

@@ -13,14 +13,14 @@ using Yao, YaoPlots; YaoPlots.darktheme!();
 # ╔═╡ 869332bd-b70e-4812-83b4-6f3bc8b1d458
 using SymEngine
 
+# ╔═╡ eb164249-b1a4-4b08-b4bb-b27ccdb9ff6b
+using CuYao
+
 # ╔═╡ e4c88a2e-ac5e-4c0c-b894-47c629289e9a
 using YaoToEinsum
 
 # ╔═╡ 46aa38fa-47ab-4c44-8bcb-655bd5ca70a6
 using KrylovKit
-
-# ╔═╡ eb164249-b1a4-4b08-b4bb-b27ccdb9ff6b
-using CuYao
 
 # ╔═╡ bd12b40f-cc40-4228-be36-fd14ba432e7d
 begin
@@ -441,6 +441,12 @@ reg20 = rand_state(20)
 # ╔═╡ c49a3d96-ed54-40fa-8be2-c38bced18636
 apply(reg20, subroutine(20, qft, (4,6,7)))
 
+# ╔═╡ 8e4ec513-88ff-42de-8edc-4de8320d5bce
+md"""
+## Section 3.1: QFT simulation on GPU
+# show to use GPU power
+"""
+
 # ╔═╡ 371fc7e0-d66c-497b-92f4-213e846c9645
 qft20 = qft_circ(20);
 
@@ -486,6 +492,15 @@ te = time_evolve(hami |> cache, -10im)
 # ╔═╡ 72ed3e7c-8f59-4267-90d7-17329e9865f5
 reg = rand_state(nbit)
 
+# ╔═╡ 830938f9-d91e-4148-99ba-5230a09a7898
+creg = reg |> cu
+
+# ╔═╡ 7ff6d244-d902-47b0-be63-1d8ffa06b483
+creg |> subroutine(20, qft, (4,6,7))
+
+#+ 2
+#== Section 3.2: QFT simulation with Tensor Networks ==#
+
 # ╔═╡ 53091912-f495-4529-a4fa-e88dbb2769ab
 energy(reg) = real(expect(hami, reg))
 
@@ -498,20 +513,7 @@ reg |> te |> normalize!
 # ╔═╡ 1f062228-6ce3-4204-8d00-c30b1edb722d
 energy(reg)
 
-# ╔═╡ 16b8b24a-aa45-482a-9e99-403d9acf3895
-# variational quantum circuit
-vcirc = EasyBuild.variational_circuit(nbit)
-
-# ╔═╡ dea1a4cc-22c4-4d50-b6dd-7531df5fc5b6
-# set circuit parameters to random
-dispatch!(vcirc, :random)
-
-# ╔═╡ 1abc7199-423b-46d0-8610-87bbbe5b36ab
-for i=1:100
-    regδ, paramsδ = expect'(hami, zero_state(16)=>vcirc)
-    dispatch!(-, vcirc, 0.1*paramsδ)
-    @show energy(zero_state(nbit) |> vcirc)
-end
+# vqe
 
 # ╔═╡ f4e496bc-4f34-4b28-bbfc-0f4709129b0e
 md"""
@@ -653,6 +655,18 @@ sz(i) = put(nbit, i=>Z)
 # ╔═╡ 9c4fcb8e-d448-42b3-8f1c-9a088eb46029
 md"# Wave function ansatz"
 
+# ╔═╡ dea1a4cc-22c4-4d50-b6dd-7531df5fc5b6
+dispatch!(dc, :random)
+
+#s output_row_delay = 0.2
+
+# ╔═╡ 1abc7199-423b-46d0-8610-87bbbe5b36ab
+for i=1:100
+    regδ, paramsδ = expect'(hami, zero_state(16)=>dc)
+    dispatch!(-, dc, 0.1*paramsδ)
+    @show energy(zero_state(nbit) |> dc)
+end
+
 # ╔═╡ eff80f11-01d4-4ea2-9660-de7e662ef459
 dispatch!(dc, :random)
 
@@ -731,23 +745,8 @@ md"""
 * ...
 """
 
-# ╔═╡ 8e4ec513-88ff-42de-8edc-4de8320d5bce
-md"""
-## Section 3.1: QFT simulation on GPU
-# show to use GPU power
-"""
-
-# ╔═╡ 830938f9-d91e-4148-99ba-5230a09a7898
-creg = reg |> cu
-
-# ╔═╡ 7ff6d244-d902-47b0-be63-1d8ffa06b483
-creg |> subroutine(20, qft, (4,6,7))
-
-#+ 2
-#== Section 3.2: QFT simulation with Tensor Networks ==#
-
-# ╔═╡ 58a636fe-39c4-49aa-a0da-e2777aba489e
-dc = dc |> autodiff(:BP)
+# ╔═╡ 16b8b24a-aa45-482a-9e99-403d9acf3895
+dc = EasyBuild.variational_circuit(nbit)
 
 # parameter management
 
@@ -755,6 +754,11 @@ dc = dc |> autodiff(:BP)
 dc = random_diff_circuit(nbit)
 
 # tag differentiable nodes
+
+# ╔═╡ 58a636fe-39c4-49aa-a0da-e2777aba489e
+dc = dc |> autodiff(:BP)
+
+# parameter management
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -2123,13 +2127,16 @@ version = "3.5.0+0"
 # ╠═e0a259f4-6d3d-45e6-890c-35115da50328
 # ╟─b517c6b9-2897-418f-b056-a256acdeffe4
 # ╟─4f6b0937-46f2-49d7-884a-b4922fcc967e
+# ╠═947fc8bf-bfcf-478c-b7c5-b235e71c4119
 # ╠═b3ad824e-92f8-4921-9e05-0d9737137e24
 # ╠═a56869c2-76c1-4d9b-af01-5df46a08422c
 # ╠═9f902bd4-2264-4608-bb89-9893ca90566f
+# ╠═d625d532-28e0-4069-908a-53cd5b9aa829
 # ╠═9c4fcb8e-d448-42b3-8f1c-9a088eb46029
 # ╠═7744f8de-2880-4e46-ac6c-42e98daa3e4c
 # ╠═58a636fe-39c4-49aa-a0da-e2777aba489e
 # ╠═eff80f11-01d4-4ea2-9660-de7e662ef459
+# ╠═7be6419a-9820-46a0-b703-48c45e82aebb
 # ╠═f4851ba6-e770-443a-b759-af5c50160608
 # ╠═ad191b6f-8300-43e2-92f1-0259931d658c
 # ╠═13e8a14e-955d-450b-9340-ae2600eac2c2
@@ -2145,9 +2152,5 @@ version = "3.5.0+0"
 # ╟─ebe2e897-0197-4d91-a482-220d666294f7
 # ╠═5857a52c-631b-4868-bd5f-2d0fc4c53cc2
 # ╠═82fed728-8b23-4fce-991b-8a427141b81b
-# ╠═eb164249-b1a4-4b08-b4bb-b27ccdb9ff6b
-# ╠═8e4ec513-88ff-42de-8edc-4de8320d5bce
-# ╠═830938f9-d91e-4148-99ba-5230a09a7898
-# ╠═7ff6d244-d902-47b0-be63-1d8ffa06b483
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002

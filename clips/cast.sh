@@ -1,1 +1,1 @@
-julia --project=. -e 'using AsciinemaGenerator; cast_file("yao-v0.8.jl"; output_file="yao-v0.8.cast", mod=Main); run(`asciinema play yao-v0.8.cast`)'
+julia --project=. -e 'using AsciinemaGenerator; cast_file("yao-v0.8.jl"; output_file="yao-v0.8.cast", output_row_delay=0.0001, mod=Main); run(`asciinema play yao-v0.8.cast`)'

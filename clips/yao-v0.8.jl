@@ -4,73 +4,109 @@ using Pkg; Pkg.status()
 using Yao
 
 #== Section 1: representing a quantum state ==#
+# Create a 3-qubit zero state
 zero_state(3)
 
 # The quantum state is represented as a vector
 statevec(zero_state(3))
 
-# Similarly, we can create a random state, a product state or a GHZ state
+# Similarly, we can create a random state
 # The element type is also configurable
 rand_state(ComplexF32, 3)
 
+# A product state
 product_state(bit"110")
 
+# A GHZ state
 ghz_state(3)
 
-# As a new feature in Yao@v0.8, qudit states are also supported
-# The following creates a random 3-level state
+# A random qutrit state
 rand_state(3, nlevel=3)
 
-# To create a qudit product state, we can use
+# A qudit product state
 product_state(dit"120;3")
 
 #== Section 2: representing a quantum circuit ==#
 # A quantum operator is represented as a matrix, or a Yao block.
-# There are two types of blocks, primitive blocks and composite blocks.
+# There are two types of blocks: primitive blocks and composite blocks.
+#+ 3
+#== Section 2.1: Primitive blocks ==#
 # Primitive blocks are the basic building blocks of a quantum circuit.
-X  # Pauli X
+# Pauli X gate
+X
 
 using SymEngine
 
-@vars θ  # symbolic variable θ
+# create a symbolic variable θ
+@vars θ
 
-rot(X, θ)  # Rotation X
+# Rotation X gate
+rot(X, θ)
 
+# The matrix representation
 mat(rot(X, θ))
 
 # The first argument of `rot` can be any reflexive operator, i.e. O² = 1
-mat(rot(SWAP, θ))  # Parameterized SWAP
+# Parameterized SWAP
+mat(rot(SWAP, θ))
 
-mat(phase(θ)) # Phase gate
+# Phase gate
+mat(phase(θ))
 
-mat(shift(θ)) # Shift gate
+# Shift gate
+mat(shift(θ))
 
-matblock(rand_unitary(2); tag="random_gate") # random single qubit matrix block
+# random single qubit matrix block
+matblock(rand_unitary(2); tag="random_gate")
 
-matblock(rand_unitary(9); nlevel=3, tag="2x3-level") # random 2 qutrit matrix block
+# random 2 qutrit matrix block
+matblock(rand_unitary(9); nlevel=3, tag="2x3-level")
 
-Measure(2)  # Measurement
+# Measurement
+Measure(2)
 
-time_evolve(X, 0.3)  # Time evolution, the first block can be any Hermitian operator
+# Time evolution, the first argument can be any Hermitian operator
+time_evolve(X, 0.3)
 
-# Composite blocks
-put(3, 1=>X)   # Put a block at the first qubit of a 3-qubit register
+#+ 3
+#== Section 2.2: Composite blocks ==#
+# Put a block at the first qubit of a 3-qubit register
+put(3, 1=>X)
 
-kron(X, X)     # Kronecker product of two blocks
+# The target gate can be applied on any subset of qubits
+put(10, (5, 2, 1) => ConstGate.Toffoli)
 
-control(3, 1, 2=>X)  # Control the second qubit of a 3-qubit register with the first qubit
+# Kronecker product of two blocks
+kron(X, X)
 
-chain(3, put(3, 1=>X), control(3, 1, 2=>X))  # Chain two blocks into a circuit
+# A more general form can be
+kron(10, 2=>X, 3=>Y)
 
-im * X   # Scaling a block
+# Control the second qubit of a 3-qubit register with the first qubit
+control(3, 1, 2=>X)
+
+# Multi-control and inverse control is supported
+# Example: if and only if qubit 1 is 1 and qubit 8 is 0,
+# apply 2-qubit gate `kron(H, Rz(π/4))` on position (7, 6).
+control(10, (1, -8), (7, 6)=>kron(H, Rz(π/4)))
+
+# Chain two blocks into a circuit
+chain(3, put(3, 1=>X), control(3, 1, 2=>X))
+
+# It is equivalent to inverse ordered operator multiplication.
+control(3, 1, 2=>X) * put(3, 1=>X)
+
+# Scaling a block
+im * X
 
 # X₁X₂ + X₂X₃
 sum([kron(3, 1=>X, 2=>X), kron(3, 2=>X, 3=>X)])
 
-#== Section 3: quantum Fourier transformation simulation ==#
-
+#== Section 3: quantum Fourier transformation simulation (QFT) ==#
+# A QFT circuit is available in `Yao.EasyBuild` module.
 EasyBuild.qft_circuit(4)
 
+# *Step by step*
 # Let's first define the CPHASE gate
 cphase(n, i, j) = control(n, i, j=> shift(2π/(2^(i-j+1))));
 
@@ -81,43 +117,38 @@ mat(control(2, 2, 1=> shift(θ)))
 hcphases(n, i) = chain(n, i==j ? put(n, i=>H) : cphase(n, j, i) for j in i:n);
 qft_circ(n::Int) = chain(n, hcphases(n, i) for i = 1:n)
 
+# Let us check the matrix representation
 qft = qft_circ(3)
 mat(qft) |> Matrix
 
-# Note: this circuit is already defined in Yao as `Yao.EasyBuild.qft_circuit`,
-
-# find matrix properties
+# Matrix properties
 ishermitian(qft)
 isunitary(qft)
 isreflexive(qft)
 
-# get the dagger of qft
+# The dagger of qft
 iqft = qft'
 
-# run an qft block on a register
+# Run the circuit
 reg = product_state(bit"011")
 out = copy(reg) |> qft
 copy(out) |> iqft ≈ reg
 
-# perform measurements on the output
+# Measure the output (without collapsing state)
 res = measure(out; nshots=10)
 
-# bit strings can be indexed (in a little endian way)
+# Measure the output and collapsing state
+res = measure!(out)
+
+# bit strings can be indexed (little endian)
 res[1][1]
 
-# if we want to run this quantum algorithm on a 20 qubit register at qubits (4,5,6,7)
+# Run this quantum algorithm on a 20 qubit register at qubits (4,6,7)
 reg = rand_state(20)
 reg |> subroutine(20, qft, (4,6,7))
 
 #+ 2
-#== Section 3.1: QFT simulation on GPU ==#
-# show to use GPU power
-using CuYao
-creg = reg |> cu
-creg |> subroutine(20, qft, (4,6,7))
-
-#+ 2
-#== Section 3.2: QFT simulation with Tensor Networks ==#
+#== Section 3.1: QFT simulation with Tensor Networks ==#
 using YaoToEinsum
 
 qft20 = qft_circ(20);
@@ -126,7 +157,7 @@ qft20 = qft_circ(20);
 tensornetwork = YaoToEinsum.yao2einsum(qft20;
     initial_state=Dict([i=>0 for i in 1:20]),
     final_state=Dict([i=>0 for i in 1:20]),
-    optimizer=TreeSA(nslices=3)
+    optimizer=YaoToEinsum.TreeSA(nslices=3)
     )
 
 # compute!
@@ -154,7 +185,7 @@ reg |> te |> normalize!
 energy(reg)
 
 # vqe
-dc = variational_circuit(nbit)
+dc = EasyBuild.variational_circuit(nbit)
 
 # parameter management
 dispatch!(dc, :random)
@@ -188,11 +219,11 @@ te = time_evolve(rydberg_chain(2; Ω=1.0, V=1e5), π/sqrt(2))
 @test fidelity(reg0 |> te, product_state(dit"12;3") + product_state(dit"21;3") |> normalize!) ≈ 1
 
 # the Levine-Pichler Pulse
-Ω = 1.0   # sign flipped
+Ω = 1.0
 τ = 4.29268/Ω
 Δ = 0.377371*Ω
 V = 1e3
-ξ = -3.90242  # sign flipped
+ξ = -3.90242
 h1 = rydberg_chain(nbits; Ω=Ω, Δ, V)
 h2 = rydberg_chain(nbits; Ω=Ω*exp(im*ξ), Δ, V)
 pulse = chain(time_evolve(h1, τ), time_evolve(h2, τ))
