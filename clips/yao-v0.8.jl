@@ -147,22 +147,6 @@ res[1][1]
 reg = rand_state(20)
 reg |> subroutine(20, qft, (4,6,7))
 
-#+ 2
-#== Section 3.1: QFT simulation with Tensor Networks ==#
-using YaoToEinsum
-
-qft20 = qft_circ(20);
-
-# convert to tensor network and optimize the contraction order
-tensornetwork = YaoToEinsum.yao2einsum(qft20;
-    initial_state=Dict([i=>0 for i in 1:20]),
-    final_state=Dict([i=>0 for i in 1:20]),
-    optimizer=YaoToEinsum.TreeSA(nslices=3)
-    )
-
-# compute!
-contract(tensornetwork)
-
 #+ 3
 #== Section 4: Simulate variational quantum algorithms ==#
 #+ 1

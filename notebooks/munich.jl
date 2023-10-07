@@ -4,6 +4,16 @@
 using Markdown
 using InteractiveUtils
 
+# This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
+macro bind(def, element)
+    quote
+        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
+        local el = $(esc(element))
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
+        el
+    end
+end
+
 # ╔═╡ 98d9b19c-5e0f-11ee-3910-a1fe8e7322f2
 using PlutoUI
 
@@ -444,35 +454,35 @@ apply(reg20, subroutine(20, qft, (4,6,7)))
 # ╔═╡ 371fc7e0-d66c-497b-92f4-213e846c9645
 qft20 = qft_circ(20);
 
-# convert to tensor network and optimize the contraction order
+# ╔═╡ 2d012753-231b-47e9-91e9-33a55c2de314
+@bind convert_to_tnet CheckBox()
 
 # ╔═╡ ee464349-8263-4688-8aa3-6d184f5b076c
+# convert to tensor network and optimize the contraction order
 tensornetwork = YaoToEinsum.yao2einsum(qft20;
     initial_state=Dict([i=>0 for i in 1:20]),
     final_state=Dict([i=>0 for i in 1:20]),
     optimizer=YaoToEinsum.TreeSA(nslices=3)
     )
 
-# compute!
-
 # ╔═╡ 3d2427af-f203-4818-9656-6d59def5baba
+# compute!
 contract(tensornetwork)
 
-#+ 3
-#== Section 4: Simulate variational quantum algorithms ==#
-#+ 1
+# ╔═╡ b7883e83-536b-4641-817f-3a0f643b4393
+md"""
+# Section 4: Simulate variational quantum algorithms
+"""
 
 # ╔═╡ 9a8a739e-6e5b-4fe0-b363-c56396de9914
 nbit = 16
 
-# the hamiltonian
-
 # ╔═╡ c1b1bf1d-961d-455f-89bf-461d2658731a
+# the hamiltonian
 hami = EasyBuild.heisenberg(nbit)
 
-# exact diagonalization
-
 # ╔═╡ 8e1e6ba1-9b54-4bb7-89ab-7e8d2c4c87d6
+# exact diagonalization
 hmat = mat(hami)
 
 # ╔═╡ 92e266c9-0bdd-4fae-b3ca-291ba13d70c4
@@ -512,6 +522,20 @@ for i=1:100
     dispatch!(-, vcirc, 0.1*paramsδ)
     @show energy(zero_state(nbit) |> vcirc)
 end
+
+# ╔═╡ 4697607a-5d39-4548-b5aa-ad9e2427aa02
+md"""
+# CuYao: Speed up your quantum simulation with GPU
+"""
+
+# ╔═╡ 28e047c7-4dba-4daf-ab0e-10c103bb6b54
+md"""The following live coding simulates a QFT circuit on GPU. It requires
+* A GPU with CUDA support
+* Julia package [`CuYao.jl`](https://github.com/QuantumBFS/CuYao.jl)
+"""
+
+# ╔═╡ 8a8b9b55-84a8-482c-a519-20a0be664275
+livecoding("https://raw.githubusercontent.com/GiggleLiu/YaoTutorial/munich/clips/yao-v0.8-cuda.cast")
 
 # ╔═╡ f4e496bc-4f34-4b28-bbfc-0f4709129b0e
 md"""
@@ -2086,8 +2110,10 @@ version = "3.5.0+0"
 # ╠═c49a3d96-ed54-40fa-8be2-c38bced18636
 # ╠═e4c88a2e-ac5e-4c0c-b894-47c629289e9a
 # ╠═371fc7e0-d66c-497b-92f4-213e846c9645
+# ╠═2d012753-231b-47e9-91e9-33a55c2de314
 # ╠═ee464349-8263-4688-8aa3-6d184f5b076c
 # ╠═3d2427af-f203-4818-9656-6d59def5baba
+# ╟─b7883e83-536b-4641-817f-3a0f643b4393
 # ╠═9a8a739e-6e5b-4fe0-b363-c56396de9914
 # ╠═c1b1bf1d-961d-455f-89bf-461d2658731a
 # ╠═8e1e6ba1-9b54-4bb7-89ab-7e8d2c4c87d6
@@ -2102,6 +2128,9 @@ version = "3.5.0+0"
 # ╠═16b8b24a-aa45-482a-9e99-403d9acf3895
 # ╠═dea1a4cc-22c4-4d50-b6dd-7531df5fc5b6
 # ╠═1abc7199-423b-46d0-8610-87bbbe5b36ab
+# ╟─4697607a-5d39-4548-b5aa-ad9e2427aa02
+# ╟─28e047c7-4dba-4daf-ab0e-10c103bb6b54
+# ╟─8a8b9b55-84a8-482c-a519-20a0be664275
 # ╟─f4e496bc-4f34-4b28-bbfc-0f4709129b0e
 # ╟─86fd00e8-289d-48ca-8904-980fc1e8dc18
 # ╟─84151b5b-cf9e-400a-8615-dd6faac87a4a
