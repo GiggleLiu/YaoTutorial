@@ -9,6 +9,7 @@ The live codings are available in [clips](clips) folder. You could play them wit
 * [clips/play-yaotoeinsum.html](clips/play-yaotoeinsum.html), the tensor network backend demo
 * [clips/play-yao.html](clips/play-yaotoeinsum.html), the demo of the rest of the tutorial, most are already included in the tutorial notebook
 
+## Questions
 If you have any questions, please feel free to open an issue or ask in one of the following channels
 1. Julia slack > yao-dev
 2. Julia zulip > yao-dev
