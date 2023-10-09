@@ -195,7 +195,7 @@ md"""
 We benchmarked the simulation of a parameterized quantum circuit with single qubit rotation and CNOT gates.
 Please refer the Yao paper for details about the benchmark targets.
 
-* Note: [CuYao.jl](https://github.com/QuantumBFS/CuYao.jl) is implemented with <600 lines of Julia code.
+* Note: [CuYao.jl](https://github.com/QuantumBFS/CuYao.jl) is implemented with <600 lines of Julia code with [CUDA.jl](https://github.com/JuliaGPU/CUDA.jl).
 """
 
 # ╔═╡ 0b4877e8-4378-428d-8913-024473b3d9e5
@@ -211,9 +211,10 @@ md"""
 ### Yao@v0.6
 * Quantum simulation
 * Matrix representation of quantum operators
-    - One can use Yao to generate the sparse matrix representation of spin Hamiltonians to size >25.
+    - Generate the sparse matrix representation of Hamiltonians with > 25 spins.
 * Arithematic operations
 * Parameter management and automatic differentiation
+    - Differentiate a quantum circuit with depth > 10,000
 * GPU backend
 """
 
@@ -226,17 +227,21 @@ md"# Current status of Yao.jl"
 # ╔═╡ ef06e741-fe88-42b5-9063-1306b00f3915
 md"""
 ###  Extra features in Yao@v0.8
-* qudits: natively supported (motivated by 3-level Rydberg atom simulation)
+* qudits: natively supported
+    - 3-level Rydberg atom simulation is possible
 * density matrix based simulation
+    - only basic noisy channels supported
 * operator indexing
 
-### Community packages
+### Packages derived from Yao
 * [Bloqade.jl](https://github.com/QuEraComputing/Bloqade.jl): Package for the quantum computation and quantum simulation based on the neutral-atom architecture (Roger Luo, [QuEra Computing Inc.](https://www.quera.com/) et al.)
 ![](https://github.com/QuEraComputing/Bloqade.jl/raw/master/docs/src/assets/logo-dark.png)
 * [YaoToEinsum.jl](https://github.com/QuantumBFS/YaoToEinsum.jl): Convert Yao circuit to OMEinsum (tensor network) contraction (GiggleLiu et al.)
 * [YaoPlots.jl](https://github.com/QuantumBFS/YaoPlots.jl): plotting Yao circuit (GiggleLiu et al.)
 * [ZXCalculus.jl](https://github.com/QuantumBFS/ZXCalculus.jl): An implementation of ZX-calculus in Julia (Chen Zhao, Roger Luo, Yusheng Zhao (through [OSPP project](https://summer-ospp.ac.cn/)) et al.)
 * [FLOYao.jl](https://github.com/QuantumBFS/FLOYao.jl): A fermionic linear optics simulator backend for Yao.jl (Jan Lukas Bosse et al)
+* [QAOA.jl](https://github.com/FZJ-PGI-12/QAOA.jl): This package implements the Quantum Approximate Optimization Algorithm and the Mean-Field Approximate Optimization Algorithm.
+* [QuantumNLDiffEq.jl](https://github.com/SciML/QuantumNLDiffEq.jl)
 """
 
 # ╔═╡ 8b1915e3-63f8-461e-bdb1-4c257aa4d438
@@ -315,6 +320,14 @@ rand_state(ComplexF32, 3)
 # A product state
 product_state(bit"110")
 
+# ╔═╡ c55f2e5e-f54c-41b8-9154-017aaf716982
+# note the bit string representation is in the little endian format.
+bit"110"[3]
+
+# ╔═╡ 22c4e552-5de5-4d3c-9a5a-8fb3b6738938
+# To print the elements with basis annotated
+print_table(product_state(bit"110"))
+
 # ╔═╡ f0c3aba2-7b8f-4f55-8fe0-6f6b664e73d3
 # A GHZ state
 ghz_state(3)
@@ -328,8 +341,11 @@ von_neumann_entropy(ghz_state(3), (1, 3)) / log(2)
 rand_state(3, nlevel=3)
 
 # ╔═╡ 9112230a-32bc-47b7-a23e-cd4a77bd764d
-# A qudit product state
+# A qudit product state, what follows ";" symbol denotes the number of levels
 product_state(dit"120;3")
+
+# ╔═╡ 277ccef5-ccd4-407c-a864-76baa83955d6
+print_table(product_state(dit"120;3"))
 
 # ╔═╡ 0e93dd67-8831-4cf0-9802-835e7b30e2f5
 md"""
@@ -830,8 +846,8 @@ md"""
 
 # ╔═╡ ebe2e897-0197-4d91-a482-220d666294f7
 md"""
-1. Roger Luo and Chen Zhao is working on [YaoExpr.jl](https://github.com/QuantumBFS/YaoExpr.jl): quantum operator algebra
-2. GiggleLiu will focus more on tensor network based simulation on density matrix.
+1. Roger's research interest is more about quantum compling, he has written packages such as [OpenQASM.jl](https://github.com/QuantumBFS/OpenQASM.jl). Roger Luo and Chen Zhao is working on [YaoExpr.jl](https://github.com/QuantumBFS/YaoExpr.jl) for the next generation of quantum compiling.
+2. GiggleLiu will focus more on tensor network based simulation of density matrices.
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
@@ -1813,7 +1829,7 @@ version = "3.5.0+0"
 # ╟─a61a214c-0a43-4a15-a5c8-72716fbf3111
 # ╟─0b4877e8-4378-428d-8913-024473b3d9e5
 # ╟─283ea80f-c749-4e59-a4f1-e73cfa32ad0d
-# ╠═b8cd9d6f-934f-4053-9d32-2535ce9d9f2c
+# ╟─b8cd9d6f-934f-4053-9d32-2535ce9d9f2c
 # ╟─b2b16731-9410-4be1-ae6e-6467547c3e81
 # ╟─e5312611-6c4c-4f51-aea0-9eb61cbb217a
 # ╟─ef06e741-fe88-42b5-9063-1306b00f3915
@@ -1825,10 +1841,13 @@ version = "3.5.0+0"
 # ╠═ad652d3e-a53e-4076-a1b0-e7ca7bd0d270
 # ╠═006f14ea-f730-4211-844d-8a37e460fa6b
 # ╠═d77242c6-d693-4d01-b04b-f8945b6b8125
+# ╠═c55f2e5e-f54c-41b8-9154-017aaf716982
+# ╠═22c4e552-5de5-4d3c-9a5a-8fb3b6738938
 # ╠═f0c3aba2-7b8f-4f55-8fe0-6f6b664e73d3
 # ╠═2668cdd7-c83a-444e-9582-3d25fbdecd67
 # ╠═d04826f5-e9a2-49cd-9f07-9d0cd4029fdb
 # ╠═9112230a-32bc-47b7-a23e-cd4a77bd764d
+# ╠═277ccef5-ccd4-407c-a864-76baa83955d6
 # ╟─0e93dd67-8831-4cf0-9802-835e7b30e2f5
 # ╟─295c6f45-0d97-42bc-b677-96ecbd124f37
 # ╠═4fd3761c-16fc-4833-97d4-6ef07c54a0bc
