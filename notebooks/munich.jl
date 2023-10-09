@@ -45,7 +45,7 @@ This is a notebook about the quantum simulator [Yao@v0.8](https://github.com/Qua
 ### Contents
 1. Overview of quantum simulation.
 2. Why we create Yao.
-3. Current status of Yao.
+3. A report on the current status of Yao.
 4. A tutorial, covering latest Yao features.
 5. Outlook.
 """
@@ -90,7 +90,7 @@ A general truth about quantum simulation: general purposed v.s. larger scale
 
 # ╔═╡ 9c651a0f-be52-46c4-803b-756d7d00a406
 md"""
-# Efficient full amplitude quantum simulation
+# Efficient circuit based simulation
 
 ProjectQ: simulate up to 45 qubits, with 0.5 Petabyte memory (Steiger et al, 2018).
 """
@@ -132,8 +132,8 @@ dispatch!(EasyBuild.variational_circuit(5, 1), :random) |> vizcircuit
 
 # ╔═╡ a01484e7-0710-4de1-aa81-92e083884902
 md"""Differential programming a quantum circuit
-* Inverse engineering, such as quantum optimal control
 * Variational quantum algorithms
+* Inverse engineering, such as quantum optimal control
 """
 
 # ╔═╡ 8da7a6c0-087c-4815-8011-4ef96ba971e1
@@ -211,6 +211,7 @@ md"""
 ### Yao@v0.6
 * Quantum simulation
 * Matrix representation of quantum operators
+    - One can use Yao to generate the sparse matrix representation of spin Hamiltonians to size >25.
 * Arithematic operations
 * Parameter management and automatic differentiation
 * GPU backend
@@ -1812,7 +1813,7 @@ version = "3.5.0+0"
 # ╟─a61a214c-0a43-4a15-a5c8-72716fbf3111
 # ╟─0b4877e8-4378-428d-8913-024473b3d9e5
 # ╟─283ea80f-c749-4e59-a4f1-e73cfa32ad0d
-# ╟─b8cd9d6f-934f-4053-9d32-2535ce9d9f2c
+# ╠═b8cd9d6f-934f-4053-9d32-2535ce9d9f2c
 # ╟─b2b16731-9410-4be1-ae6e-6467547c3e81
 # ╟─e5312611-6c4c-4f51-aea0-9eb61cbb217a
 # ╟─ef06e741-fe88-42b5-9063-1306b00f3915
