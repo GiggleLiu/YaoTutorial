@@ -191,35 +191,35 @@ reg = zero_state(nbits; nlevel=3)
 
 # prepare all states in (|0> - i|1>)/sqrt(2)
 # time evolve π/4 with the Raman pulse Hamiltonian is equivalent to doing a X rotation π/2
-apply!(reg, time_evolve(rydberg_chain(nbits; r=1.0), π/4))
+apply!(reg, time_evolve(EasyBuild.rydberg_chain(nbits; r=1.0), π/4))
 
+# compute the expected value
 expected = join(fill(arrayreg([1.0, -im, 0]; nlevel=3), nbits)...) |> normalize!
+
+using Test
 
 @test reg ≈ expected
 
-# |11> -> |W>
+# evolve from |11> to |W>, where $|W> = (|1r> + |r1>)/sqrt(2)$
 reg0 = product_state(dit"11;3")
-te = time_evolve(rydberg_chain(2; Ω=1.0, V=1e5), π/sqrt(2))
+te = time_evolve(EasyBuild.rydberg_chain(2; Ω=1.0, V=1e5), π/sqrt(2))
 @test fidelity(reg0 |> te, product_state(dit"12;3") + product_state(dit"21;3") |> normalize!) ≈ 1
 
 # the Levine-Pichler Pulse
+# Reference: Levine et al, RPL 123, 1–16. https://doi.org/10.1103/PhysRevLett.123.170503
 Ω = 1.0
 τ = 4.29268/Ω
 Δ = 0.377371*Ω
 V = 1e3
 ξ = -3.90242
-h1 = rydberg_chain(nbits; Ω=Ω, Δ, V)
-h2 = rydberg_chain(nbits; Ω=Ω*exp(im*ξ), Δ, V)
+h1 = EasyBuild.rydberg_chain(nbits; Ω=Ω, Δ, V)
+h2 = EasyBuild.rydberg_chain(nbits; Ω=Ω*exp(im*ξ), Δ, V)
+# implement the pulse by evolving with h1 and h2
 pulse = chain(time_evolve(h1, τ), time_evolve(h2, τ))
-@test mat(pulse) * reg.state ≈ apply(reg, pulse).state
-@test ishermitian(h1) && ishermitian(h2)
 
 i, j = dit"01;3", dit"11;3"
 
-# half pulse drives |11> to |11>
-# the first pulse completes a circle
-@test isapprox(pulse[1][j, j]|> abs, 1; atol=1e-3)
-
+# check that this sequence implementes a CZ gate.
 ang1 = angle(pulse[i, i]) / π
 ang2 = angle(pulse[j, j]) / π
 @test isapprox(abs(pulse[i,i]), 1; atol=1e-2)

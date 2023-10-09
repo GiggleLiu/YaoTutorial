@@ -7,6 +7,7 @@ The materials for [JuliaUserGroupMunich talk on Yao.jl](https://discourse.julial
 The live codings are available in [clips](clips) folder. You could play them with [asciinema](https://asciinema.org/) player or using a browser to open the following files
 * [clips/play-yaocuda.html](clips/play-yaocuda.html), the CUDA backend demo
 * [clips/play-yaotoeinsum.html](clips/play-yaotoeinsum.html), the tensor network backend demo
+* [clips/play-yao.html](clips/play-yaotoeinsum.html), the demo of the rest of the tutorial, most are already included in the tutorial notebook
 
 If you have any questions, please feel free to open an issue or ask in one of the following channels
 1. Julia slack > yao-dev
