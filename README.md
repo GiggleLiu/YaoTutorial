@@ -1,43 +1,14 @@
-# A tutorial for Yao@v0.6
+# Yao@v0.8 Tutorial
 
-For `Yao@v0.5` tutorial, click [here](https://github.com/GiggleLiu/YaoTutorial/tree/v0.5.0).
+The materials for [JuliaUserGroupMunich talk on Yao.jl](https://discourse.julialang.org/t/juliausergroupmunich-jinguo-liu-quantum-computing-with-yao-jl/104248) is available at folder [notebooks](notebooks), which includes
+* [munich.jl](notebooks/munich.jl) ([Pluto](https://github.com/fonsp/Pluto.jl) notebook)
+* [munich.pdf](notebooks/munich.pdf) (generated from the notebook, the live codings are lost)
 
-Setup Julia and Jupyter notebook environment following the instructions in
-https://datatofish.com/add-julia-to-jupyter/,
+The live codings are available in [clips](clips) folder. You could play them with [asciinema](https://asciinema.org/) player or using a browser to open the following files
+* [clips/play-yaocuda.html](clips/play-yaocuda.html), the CUDA backend demo
+* [clips/play-yaotoeinsum.html](clips/play-yaotoeinsum.html), the tensor network backend demo
 
-Then open a shell and type
-
-```bash
-$ jupyter notebook YaoTutorial.ipynb
-```
-
-## live coding
-
-##### Notes on Clip
-* Quantum Block Intermediate Representation (QBIR) of QFT
-* get matrix representation of a block
-* analyze properties
-* dagger a block
-* apply a blocks to a register
-* measure a register
-* using GPU
-* Constructing a hamiltonian
-* get the expectation value
-* solve the ground state through
-    * exact diagonalization (with KrylovKit)
-    * variational quantum eigensolver approach
-    * imaginary time evolution
-
-
-[![asciicast](https://asciinema.org/a/R3v3xcdp7M38CGWWxS0YH4mLG.svg)](https://asciinema.org/a/R3v3xcdp7M38CGWWxS0YH4mLG?speed=2)
-
-## References
-##### Find Yao
-https://github.com/QuantumBFS/Yao.jl
-
-##### Find Quantum algorihtms
-https://github.com/QuantumBFS/QuAlgorithmZoo.jl
-
-## How To contribute
-* submit an issue to report a bug, or ask for a feature request,
-* help us polish documentations, write more tests
+If you have any questions, please feel free to open an issue or ask in one of the following channels
+1. Julia slack > yao-dev
+2. Julia zulip > yao-dev
+3. Julia discourse > quantum category

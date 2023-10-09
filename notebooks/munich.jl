@@ -311,6 +311,9 @@ zero_state(3)
 # The quantum state is represented as a vector
 statevec(zero_state(3))
 
+# ╔═╡ 22966094-d97b-4d1e-8065-dc9e33fae003
+print_table(zero_state(3))
+
 # ╔═╡ 006f14ea-f730-4211-844d-8a37e460fa6b
 # Similarly, we can create a random state
 # The element type is also configurable
@@ -332,9 +335,15 @@ print_table(product_state(bit"110"))
 # A GHZ state
 ghz_state(3)
 
+# ╔═╡ 20304d97-c166-46c0-a2e0-75d901f66d6d
+print_table(ghz_state(3))
+
 # ╔═╡ 2668cdd7-c83a-444e-9582-3d25fbdecd67
 # there is a single bit entanglement entropy between qubit sets (1, 3) and (2,)
 von_neumann_entropy(ghz_state(3), (1, 3)) / log(2)
+
+# ╔═╡ c43727a2-1a31-4684-87b6-9af2f1938487
+von_neumann_entropy(zero_state(3), (1, 3)) / log(2)
 
 # ╔═╡ d04826f5-e9a2-49cd-9f07-9d0cd4029fdb
 # A random qutrit state
@@ -392,6 +401,12 @@ mat(rot(X, θ))
 # Parameterized SWAP
 mat(rot(SWAP, θ))
 
+# ╔═╡ 3b543d83-f2fd-4976-a496-778baf265b75
+isreflexive(SWAP)
+
+# ╔═╡ 06373820-7687-43c3-b779-17019d520d28
+isreflexive(kron(SWAP, X))
+
 # ╔═╡ b7c14cba-31f0-4fad-9f43-f61a1028b294
 # Phase gate
 mat(phase(θ))
@@ -428,6 +443,9 @@ vizcircuit(Measure(2))
 # Time evolution, the first argument can be any Hermitian operator
 time_evolve(X, 0.3)
 
+# ╔═╡ 27471635-a488-43e8-bba5-8b587fdd84f0
+ishermitian(kron(X+Y, X))
+
 # ╔═╡ 96192c95-da9a-42ad-8acb-d93e1f348a34
 md"""
 ## Part 2.2: Composite blocks
@@ -440,6 +458,9 @@ put(3, 1=>X)
 # ╔═╡ 2b6622a7-f37b-4c66-b73d-3309570252e2
 vizcircuit(put(3, 1=>X))
 
+# ╔═╡ 4ed2b831-9941-42be-bcdb-4a11e82f4713
+mat(put(3, 1=>X))
+
 # ╔═╡ 2a7a0629-678c-43d7-9f84-f82e2207c192
 # The target gate can be applied on any subset of qubits
 put(10, (5, 2, 1) => ConstGate.Toffoli)
@@ -450,6 +471,9 @@ vizcircuit(put(10, (5, 2, 1) => ConstGate.Toffoli))
 # ╔═╡ cacfd179-1c09-4048-bf55-d95ac30a20b8
 # Kronecker product of two blocks
 kron(X, X)
+
+# ╔═╡ 47d82c8b-54a7-44d1-8924-f579e96540d4
+vizcircuit(kron(X, X))
 
 # ╔═╡ 676c9ed7-1c42-42d9-84a5-9d07f7c50f3c
 # A more general form can be
@@ -598,6 +622,10 @@ hami = EasyBuild.heisenberg(nbit)
 # exact diagonalization
 hmat = mat(hami)
 
+# ╔═╡ 3145df67-cdf5-42f9-a2d3-fb7e3cbb6068
+# If you only want to get one column, the following way is much faster
+hami[:,bit"0010001110"]
+
 # ╔═╡ 92e266c9-0bdd-4fae-b3ca-291ba13d70c4
 # `eigsolve` is for solving dominant eigenvalue problem of the target Hamiltonian
 # the second argument `1` means converging at least one eigenvectors.
@@ -652,11 +680,6 @@ Source code is available in file: `clips/yao-v0.8-cuda.jl`
 
 # ╔═╡ 8a8b9b55-84a8-482c-a519-20a0be664275
 livecoding("https://raw.githubusercontent.com/GiggleLiu/YaoTutorial/munich/clips/yao-v0.8-cuda.cast")
-
-# ╔═╡ f4e496bc-4f34-4b28-bbfc-0f4709129b0e
-md"""
-# YaoToEinsum
-"""
 
 # ╔═╡ 6237ef80-8efb-4df0-95c4-22197b85f248
 md"""
@@ -769,14 +792,17 @@ LocalResource("images/yaotoeinsum-question.png")
 # ╔═╡ 2ddadb79-b52d-4ed8-b471-d6c8121ec798
 md"""
 ```julia
-julia> @btimes get_your_question_anwsered(
-		"slack > yao_dev", 
+julia> @btime get_your_question_anwsered(
+		"slack > yao-dev", 
 		"zulip > yao-dev", 
 		"discourse > quantum category"
 	)
 1 hour
 ```
 """
+
+# ╔═╡ 24124e48-969a-475a-b3a5-787127364960
+md"Yao community call will be announced in the Julia slack."
 
 # ╔═╡ d1449d83-02ce-45d0-adfe-db86a5ece921
 md"""
@@ -871,7 +897,7 @@ YaoPlots = "~0.8.1"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.10.0-beta3"
+julia_version = "1.10.0-beta2"
 manifest_format = "2.0"
 project_hash = "b1b5daf77014b58fb8b586b8dbf7f9ec10690c2f"
 
@@ -1076,7 +1102,7 @@ version = "1.0.10+0"
 [[deps.GMP_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "781609d7-10c4-51f6-84f2-b8444358ff6d"
-version = "6.2.1+6"
+version = "6.2.1+5"
 
 [[deps.GPUArraysCore]]
 deps = ["Adapt"]
@@ -1223,13 +1249,8 @@ uuid = "deac9b47-8bc7-5906-a0fe-35ac56dc84c0"
 version = "8.0.1+1"
 
 [[deps.LibGit2]]
-deps = ["Base64", "LibGit2_jll", "NetworkOptions", "Printf", "SHA"]
+deps = ["Base64", "NetworkOptions", "Printf", "SHA"]
 uuid = "76f85450-5226-5b5a-8eaa-529ad045b433"
-
-[[deps.LibGit2_jll]]
-deps = ["Artifacts", "LibSSH2_jll", "Libdl", "MbedTLS_jll"]
-uuid = "e37daf67-58a4-590a-8e99-b0245dd2ffc5"
-version = "1.6.4+0"
 
 [[deps.LibSSH2_jll]]
 deps = ["Artifacts", "Libdl", "MbedTLS_jll"]
@@ -1560,7 +1581,7 @@ version = "1.4.2"
 [[deps.Statistics]]
 deps = ["LinearAlgebra", "SparseArrays"]
 uuid = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
-version = "1.10.0"
+version = "1.9.0"
 
 [[deps.StatsAPI]]
 deps = ["LinearAlgebra"]
@@ -1633,9 +1654,9 @@ uuid = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
 
 [[deps.XML2_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Libiconv_jll", "Zlib_jll"]
-git-tree-sha1 = "24b81b59bd35b3c42ab84fa589086e19be919916"
+git-tree-sha1 = "04a51d15436a572301b5abbb9d099713327e9fc4"
 uuid = "02c8fc9c-b97f-50b9-bbe4-9be30ff0a78a"
-version = "2.11.5+0"
+version = "2.10.4+0"
 
 [[deps.XSLT_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Libgcrypt_jll", "Libgpg_error_jll", "Libiconv_jll", "Pkg", "XML2_jll", "Zlib_jll"]
@@ -1839,12 +1860,15 @@ version = "3.5.0+0"
 # ╟─6281b968-b4bb-4ec7-8cd6-da3e788c2287
 # ╠═b7d014b8-2c13-4ab0-8477-4d3284bc8f2d
 # ╠═ad652d3e-a53e-4076-a1b0-e7ca7bd0d270
+# ╠═22966094-d97b-4d1e-8065-dc9e33fae003
 # ╠═006f14ea-f730-4211-844d-8a37e460fa6b
 # ╠═d77242c6-d693-4d01-b04b-f8945b6b8125
 # ╠═c55f2e5e-f54c-41b8-9154-017aaf716982
 # ╠═22c4e552-5de5-4d3c-9a5a-8fb3b6738938
 # ╠═f0c3aba2-7b8f-4f55-8fe0-6f6b664e73d3
+# ╠═20304d97-c166-46c0-a2e0-75d901f66d6d
 # ╠═2668cdd7-c83a-444e-9582-3d25fbdecd67
+# ╠═c43727a2-1a31-4684-87b6-9af2f1938487
 # ╠═d04826f5-e9a2-49cd-9f07-9d0cd4029fdb
 # ╠═9112230a-32bc-47b7-a23e-cd4a77bd764d
 # ╠═277ccef5-ccd4-407c-a864-76baa83955d6
@@ -1859,6 +1883,8 @@ version = "3.5.0+0"
 # ╠═3d79dc1c-082a-43fc-8037-d988eb3a81a6
 # ╠═935c518b-7a7f-485c-b37b-cb165e6ee77b
 # ╠═ff79a542-7a68-4d74-bf10-664b7e6fe7ba
+# ╠═3b543d83-f2fd-4976-a496-778baf265b75
+# ╠═06373820-7687-43c3-b779-17019d520d28
 # ╠═b7c14cba-31f0-4fad-9f43-f61a1028b294
 # ╠═870bd2cd-2cf8-475d-b1d9-ce6113af5efb
 # ╠═4b9997ce-b45d-40ca-934e-ef72acea4e7d
@@ -1869,12 +1895,15 @@ version = "3.5.0+0"
 # ╠═6deb86e7-07de-4c2b-9ab8-8005e57582b6
 # ╠═2c4c0aac-8919-41c6-bb8f-b7bea5d2f759
 # ╠═4768ac25-62ed-42ae-a0c6-c039dabdbdae
+# ╠═27471635-a488-43e8-bba5-8b587fdd84f0
 # ╟─96192c95-da9a-42ad-8acb-d93e1f348a34
 # ╠═abe87acc-29fb-4b64-9adb-d7a9b59b1ded
 # ╠═2b6622a7-f37b-4c66-b73d-3309570252e2
+# ╠═4ed2b831-9941-42be-bcdb-4a11e82f4713
 # ╠═2a7a0629-678c-43d7-9f84-f82e2207c192
 # ╠═9451d2e5-e592-4ccd-b081-554d29891488
 # ╠═cacfd179-1c09-4048-bf55-d95ac30a20b8
+# ╠═47d82c8b-54a7-44d1-8924-f579e96540d4
 # ╠═676c9ed7-1c42-42d9-84a5-9d07f7c50f3c
 # ╠═4171ac27-2d56-4699-b816-300a56da94ec
 # ╠═3cfa909e-935c-4f41-9b32-fe86aef0026e
@@ -1915,6 +1944,7 @@ version = "3.5.0+0"
 # ╠═9a8a739e-6e5b-4fe0-b363-c56396de9914
 # ╠═c1b1bf1d-961d-455f-89bf-461d2658731a
 # ╠═8e1e6ba1-9b54-4bb7-89ab-7e8d2c4c87d6
+# ╠═3145df67-cdf5-42f9-a2d3-fb7e3cbb6068
 # ╠═46aa38fa-47ab-4c44-8bcb-655bd5ca70a6
 # ╠═92e266c9-0bdd-4fae-b3ca-291ba13d70c4
 # ╠═16b8b24a-aa45-482a-9e99-403d9acf3895
@@ -1926,7 +1956,6 @@ version = "3.5.0+0"
 # ╟─4697607a-5d39-4548-b5aa-ad9e2427aa02
 # ╟─28e047c7-4dba-4daf-ab0e-10c103bb6b54
 # ╟─8a8b9b55-84a8-482c-a519-20a0be664275
-# ╟─f4e496bc-4f34-4b28-bbfc-0f4709129b0e
 # ╟─6237ef80-8efb-4df0-95c4-22197b85f248
 # ╟─b92db46b-3c34-44c6-92a5-1a1d3bed3a1f
 # ╟─86fd00e8-289d-48ca-8904-980fc1e8dc18
@@ -1945,6 +1974,7 @@ version = "3.5.0+0"
 # ╟─bf7643c4-bae0-4d77-9903-29943f2efe5a
 # ╟─182b6520-d423-4aa5-8ef0-5e16f28960f6
 # ╟─2ddadb79-b52d-4ed8-b471-d6c8121ec798
+# ╟─24124e48-969a-475a-b3a5-787127364960
 # ╟─d1449d83-02ce-45d0-adfe-db86a5ece921
 # ╟─e0a259f4-6d3d-45e6-890c-35115da50328
 # ╟─6abb5d21-6e36-46a0-8448-3231a58b6694

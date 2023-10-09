@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>Asccinema Demo Page</title>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/asciinema-player@3.0.1/dist/bundle/asciinema-player.css" />
+<script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.0.1/dist/bundle/asciinema-player.min.js"></script>
+</head>
+<body>
+    <h1>Yao's CUDA backend</h1>
+    <div>
+        <div></div>
+        <script>
+            var target = document.currentScript.parentElement.firstElementChild;
+            AsciinemaPlayer.create('https://raw.githubusercontent.com/GiggleLiu/YaoTutorial/master/clips/yao-v0.8-cuda.cast', target);
+            target.firstChild.firstChild.firstChild.style.background = "#000000";
+            target.firstChild.firstChild.firstChild.style.color = "#FFFFFF";
+        </script>
+    </div>
+</body>
+
+</html>
